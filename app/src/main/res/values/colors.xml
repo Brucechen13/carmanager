@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#fff9f9fa</color>
+    <color name="black">#ff000000</color>
+    <color name="blueIndexStatus">#ff67a5ef</color>
+    <color name="blueStatus">#ff1680e2</color>
+    <color name="blueText">#ff1485c6</color>
+    <color name="colorAccent">#ffff4081</color>
+    <color name="colorPrimary">#ff3f51b5</color>
+    <color name="colorPrimaryDark">#ff303f9f</color>
+    <color name="colorTheme">#ff1296db</color>
+    <color name="dark">#ff424242</color>
+    <color name="fragment_background">#fffafafa</color>
+    <color name="gray_line_color">#ffe5e5e5</color>
+    <color name="grey">#ff8c8c8c</color>
+    <color name="greyBackground">#ffcfcfcf</color>
+    <color name="line">#ffeeeeee</color>
+    <color name="list_item_subtitle_color">#ff999999</color>
+    <color name="list_item_title_color">#ff242424</color>
+    <color name="list_item_vote_color">#ffb2b2b2</color>
+    <color name="red">#ffd4212a</color>
+    <color name="tab_background">#fff7f7f7</color>
+    <color name="tab_main_text_1">#ffaaaaaa</color>
+    <color name="tab_main_text_2">#ff74b5f7</color>
+    <color name="tab_top2_text_1">#ff000000</color>
+    <color name="tab_top2_text_2">#ffffffff</color>
+    <color name="tab_top_background">#ffeb423d</color>
+    <color name="tab_top_text_1">#ffaaaaaa</color>
+    <color name="tab_top_text_2">#ffeb413d</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="login_button">#ff775025</color>
+    <color name="text_noraml_color">#ff555555</color>
+    <color name="text_selected">#ff42abe4</color>
+
+    <color name="gray_text">#909497</color>
+
+    <color name="normal_bg_color">#ebebeb</color>
+
+    <color name="black_gray">#212121</color>
+    <color name="black_font_color">#191919</color>
+    <color name="fra_mine_bg_color">#edecec</color>
+    <color name="fra_mine_item_bg_color">#ffffff</color>
+</resources>

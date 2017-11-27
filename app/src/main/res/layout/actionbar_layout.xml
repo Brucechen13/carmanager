@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_titlebar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="#2B2B2B">
+
+    <TextView
+        android:id="@+id/action_bar_title_tv"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center"
+        android:lines="1"
+        android:textColor="#fff"
+        android:focusable="true"
+        android:text="@string/button_ok"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:layout_centerInParent="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/action_bar_back_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:src="@mipmap/ic_delete_grey" />
+
+    <TextView
+        android:padding="10dp"
+        android:layout_alignParentEnd="true"
+        android:text="@string/button_ok"
+        android:id="@+id/action_bar_comint_tv"
+        android:textSize="15sp"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_marginEnd="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="3dp" />
+</RelativeLayout>
