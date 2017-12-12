@@ -1,7 +1,6 @@
 package com.cc.carmanager.adapt;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +38,7 @@ public class CarsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View hold = mLayoutInflater.inflate(R.layout.item_news, parent, false);
+        View hold = mLayoutInflater.inflate(R.layout.item_index_other, parent, false);
         return new TextViewHolder(hold);
     }
 

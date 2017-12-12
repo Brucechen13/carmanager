@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cc.carmanager.R;
-import com.cc.carmanager.adapt.CarsNewsAdapter;
+import com.cc.carmanager.adapt.CarsNewsBigAdapter;
+import com.cc.carmanager.adapt.CarsNewsSmallAdapter;
+import com.cc.carmanager.adapt.holder.CommonViewHolder;
 import com.cc.carmanager.bean.CarsNewsBean;
+import com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior;
 import com.cc.carmanager.net.VolleyInstance;
 import com.cc.carmanager.net.VolleyResult;
 import com.cc.carmanager.util.NetUrlsSet;
@@ -22,13 +25,14 @@ import com.shizhefei.fragment.LazyFragment;
  */
 public class NewsFragment extends LazyFragment {
     private CarsNewsBean mRecommendBean;
-    private CarsNewsAdapter normalRecyclerViewAdapter;
+    private RecyclerView.Adapter<CommonViewHolder> normalRecyclerViewAdapter;
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Handler handler = new Handler();
     private boolean isLoading;
 
+    private int position;
 
     protected Context mContext;
     @Override
@@ -37,11 +41,20 @@ public class NewsFragment extends LazyFragment {
         mContext=context;
     }
 
+
+    private UcNewsHeaderPagerBehavior mPagerBehavior;
+    public void setPagerBehavior(UcNewsHeaderPagerBehavior mPagerBehavior){
+        this.mPagerBehavior = mPagerBehavior;
+    }
+
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
-
         setContentView(R.layout.news_fragment_layout);
+
+        Bundle bundle = getArguments();
+        position = bundle.getInt("position");
+
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.SwipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -49,17 +62,24 @@ public class NewsFragment extends LazyFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getRefreshData();
-                    }
-                }, 1000);
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        getRefreshData();
+//                    }
+//                }, 1000);
+                swipeRefreshLayout.setRefreshing(false);
+                mPagerBehavior.openPager();
             }
         });
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
-        normalRecyclerViewAdapter = new CarsNewsAdapter(getActivity(), mRecyclerView);
+
+        if(position == 0) {
+            normalRecyclerViewAdapter = new CarsNewsBigAdapter(getActivity(), mRecyclerView);
+        }else{
+            normalRecyclerViewAdapter = new CarsNewsSmallAdapter(getActivity(), mRecyclerView);
+        }
         mRecyclerView.setAdapter(normalRecyclerViewAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -70,6 +90,7 @@ public class NewsFragment extends LazyFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                Log.e("info", "onScrolled" + dy);
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition + 1 == normalRecyclerViewAdapter.getItemCount()) {
                     boolean isRefreshing = swipeRefreshLayout.isRefreshing();

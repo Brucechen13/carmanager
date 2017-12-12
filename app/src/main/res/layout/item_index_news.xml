@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_size_5dp"
+    android:orientation="vertical">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/index_news_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginBottom="@dimen/dimen_size_5dp"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/index_news_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="标题"
+        android:layout_marginBottom="@dimen/dimen_size_5dp"
+        android:textSize="@dimen/micro_text_size"
+        android:textColor="@color/black_title_color"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/index_news_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dimen_size_10dp"
+            android:text="0万播放"
+            android:textSize="@dimen/micro_text_size"/>
+
+        <TextView
+            android:id="@+id/index_news_reads"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dimen_size_10dp"
+            android:layout_weight="1"
+            android:text="0评论"
+            android:textSize="@dimen/micro_text_size"/>
+
+        <TextView
+            android:id="@+id/index_news_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="@dimen/micro_text_size"/>
+    </LinearLayout>
+</LinearLayout>

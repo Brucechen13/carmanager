@@ -54,7 +54,10 @@
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.CarsDetailActivity"
-            android:theme="@style/AppTheme.WithBar"
+            android:theme="@style/AppTheme.Base"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.IndexArticleActivity"
+            android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.PriceFilterActivity"/>
 

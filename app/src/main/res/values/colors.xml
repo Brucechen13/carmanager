@@ -34,6 +34,7 @@
     <color name="text_selected">#ff42abe4</color>
 
     <color name="gray_text">#909497</color>
+    <color name="black_title_color">#030303</color>
 
     <color name="normal_bg_color">#ebebeb</color>
 

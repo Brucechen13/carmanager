@@ -13,6 +13,7 @@
     <dimen name="list_hot_car_image_weight">55.0dip</dimen>
     <dimen name="list_item_text_image_height">68.0dip</dimen>
     <dimen name="list_item_text_image_weight">92.0dip</dimen>
+    <dimen name="list_item_recommand_image_weight">62.0dp</dimen>
     <dimen name="list_item_vote_padding">1.0dip</dimen>
     <dimen name="list_margin_left_and_right">7.0dip</dimen>
     <dimen name="list_margin_top_and_bottom">10.0dip</dimen>
@@ -64,4 +65,13 @@
     <dimen name="fra_mine_item_margin_vertical">10dp</dimen>
     <dimen name="fra_mine_login_height">30dp</dimen>
     <dimen name="fra_mine_login_padding_vertical">20dp</dimen>
+
+
+
+
+    <dimen name="uc_news_header_title_height">35dip</dimen>
+    <dimen name="uc_news_header_title_init_offset">-45dip</dimen>
+    <dimen name="uc_news_header_pager_offset">-90dip</dimen>
+    <dimen name="uc_news_header_tab_offset">-65dip</dimen>
+    <dimen name="uc_news_tabs_height">45dip</dimen>
 </resources>

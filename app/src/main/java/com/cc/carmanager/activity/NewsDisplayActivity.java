@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.cc.carmanager.R;
+import com.cc.carmanager.activity.base.BarBaseActivity;
 import com.cc.carmanager.util.URLImageParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -27,7 +28,7 @@ import org.json.JSONObject;
 /**
  * Created by chenc on 2017/10/24.
  */
-public class NewsDisplayActivity extends AppCompatActivity {
+public class NewsDisplayActivity extends BarBaseActivity {
     //private SystemBarTintManager tintManager;
     private Context context;
     private TextView content;
@@ -40,17 +41,8 @@ public class NewsDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initWindow();
         setContentView(R.layout.activity_news_display);
-        context = this;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) {
-            bar.setTitle(" ");
-            bar.setDisplayHomeAsUpEnabled(true);
-            bar.setHomeButtonEnabled(true);
-        }
-
+        setHeader("新能源汽车");
 
         String html = "Hello \n" +
                 "<img src='http://ww1.sinaimg.cn/mw600/4dc7b570jw1drn1o8mrp0j.jpg' />" +

@@ -1,18 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@id/id_uc_news_header_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <include layout="@layout/item_banner" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="83dp"
+            android:layout_marginLeft="13dp"
+            android:orientation="horizontal">
+
+            <com.cc.carmanager.view.ImageTextView
+                android:id="@+id/menu_knowledge_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.cc.carmanager.view.ImageTextView
+                android:id="@+id/menu_manual_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.cc.carmanager.view.ImageTextView
+                android:id="@+id/menu_article_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.cc.carmanager.view.ImageTextView
+                android:id="@+id/menu_standard_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.cc.carmanager.view.ImageTextView
+                android:id="@+id/menu_material_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_size_5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_size_30dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/index_recommend"
+                    android:textColor="@color/black_title_color"
+                    android:textSize="@dimen/small_text_size"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/index_recommend_more"
+                    android:textColor="@color/black_title_color"
+                    android:textSize="@dimen/small_text_size" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_size_5dp"
+                    android:layout_marginRight="@dimen/dimen_size_5dp"
+                    android:src="@mipmap/android_list_idex" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/news_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/bg_cut_line"
+                android:dividerHeight="1px"
+                android:listSelector="@android:color/transparent" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fffffbfa"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
+
+        <com.cc.carmanager.widget.CustomEditText
+            android:id="@+id/school_friend_member_search_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_search_input"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/ic_edit_text_delbtn"
+            android:focusable="false"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:hint="搜索"
+            android:imeOptions="actionSearch"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textColorHint="#ffb5b5b5"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
     <com.shizhefei.view.indicator.ScrollIndicatorView
         android:id="@+id/fragment_tabmain_indicator"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:background="@color/fragment_background"/>
+        android:layout_height="35dp"
+        android:background="@color/fragment_background"
+        app:layout_behavior="com.cc.carmanager.behavior.uc.UcNewsTabBehavior" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_tabmain_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="com.cc.carmanager.behavior.uc.UcNewsContentBehavior" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
