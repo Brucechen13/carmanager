@@ -29,7 +29,7 @@
         android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="#fff"
-        android:src="@mipmap/ic_delete_grey" />
+        android:src="@mipmap/icon_return" />
 
     <TextView
         android:padding="10dp"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">新能源汽车</string>
+    <string name="app_name">新能源汽车0</string>
     <string name="action_settings">Settings</string>
     <string name="login">登录</string>
     <string name="phone">请输入您的电话号码</string>
@@ -34,8 +34,10 @@
     <string name="test">只是测试</string>
 
 
+    <string name="setting">我的设置</string>
     <string name="setting_save">我的收藏</string>
     <string name="button_ok">确定</string>
+    <string name="search">搜索</string>
 
     <!-- 价格区间页面 -->
     <string name="price_intro">自定义价格</string>

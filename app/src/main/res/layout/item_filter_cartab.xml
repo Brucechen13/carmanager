@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- 今天 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/dimen_size_10dp"
+        android:paddingLeft="@dimen/dimen_size_10dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:id="@+id/ll_tab">
+
+            <TextView
+                android:id="@+id/tv_tab_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:text="@string/test"
+                android:textColor="@color/gray_text"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_tab_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_order_down_select"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view_mask_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@mipmap/bg_order_filter"
+            android:visibility="gone"/>
+
+        <ListView
+            android:id="@+id/lv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

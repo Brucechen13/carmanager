@@ -1,6 +1,5 @@
 package com.cc.carmanager.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,22 +39,23 @@ public class IndexArticleActivity extends BarBaseActivity{
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
         normalRecyclerViewAdapter = new CarsNewsSmallAdapter(this, mRecyclerView);
         mRecyclerView.setAdapter(normalRecyclerViewAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Log.e("info", "onScrolled" + dy);
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                Log.e("info", "onScrolled" + dy);
+//            }
+//        });
 
         initNews();
 
-        setHeader("自学教材");
+        Bundle bundle = getIntent().getExtras();
+        setHeader(bundle.getString("title"));
     }
 
 

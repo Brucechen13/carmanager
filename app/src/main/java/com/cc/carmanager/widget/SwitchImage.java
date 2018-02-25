@@ -1,7 +1,6 @@
 package com.cc.carmanager.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;

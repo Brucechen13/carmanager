@@ -3,7 +3,6 @@ package com.cc.carmanager.behavior.uc;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -74,7 +73,7 @@ public class UcNewsTabBehavior extends HeaderScrollingViewBehavior {
     }
 
     private int getFinalHeight() {
-        return MyApplication.getContext().getResources().getDimensionPixelOffset(R.dimen.uc_news_header_title_height);
+        return MyApplication.getContext().getResources().getDimensionPixelOffset(R.dimen.uc_news_tabs_height);
     }
 
 

@@ -1,11 +1,15 @@
 package com.cc.carmanager.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import com.cc.carmanager.fragment.HomeFragment;
 import com.cc.carmanager.fragment.MapsFragment;
 import com.cc.carmanager.fragment.MaterialFragment;
 import com.cc.carmanager.fragment.ProfileFragment;
+import com.cc.carmanager.util.ToastUtils;
 import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.viewpager.SViewPager;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private IndicatorViewPager indicatorViewPager;
     //private SystemBarTintManager tintManager;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
 //        toolbar.setTitle(R.string.index_name);
 //        setSupportActionBar(toolbar);
         invalidateOptionsMenu();
+
+
+        //检查版本是否大于M
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_CALL_LOCATION);
+            }else {
+                ToastUtils.makeShortText("权限已申请", this);
+            }
+        }
     }
 
     @TargetApi(19)
@@ -61,6 +79,19 @@ public class MainActivity extends AppCompatActivity {
 //            tintManager.setStatusBarTintColor(getResources().getColor(R.color.tab_top_background));
 //            tintManager.setStatusBarTintEnabled(true);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_CALL_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ToastUtils.makeShortText("权限已申请", this);
+            } else {
+                ToastUtils.makeShortText("用户关闭权限申请", this);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {

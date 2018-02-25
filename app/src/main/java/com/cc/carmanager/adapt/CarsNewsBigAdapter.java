@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.NewsDisplayActivity;
 import com.cc.carmanager.adapt.holder.CommonViewHolder;
-import com.cc.carmanager.bean.CarsNewsBean;
 import com.youth.banner.BannerConfig;
 
 import java.util.ArrayList;
@@ -20,14 +19,13 @@ import java.util.List;
 /**
  * Created by chenc on 2017/10/23.
  */
-public class CarsNewsBigAdapter extends RecyclerView.Adapter<CommonViewHolder> {
+public class CarsNewsBigAdapter extends CarsNewsBaseAdapter {
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_BANNER = 1;
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private RecyclerView recyclerView;
-    private CarsNewsBean datas;
 
     int defaultImage = R.drawable.load_fail;
     int failImage = R.drawable.load_fail;
@@ -39,11 +37,6 @@ public class CarsNewsBigAdapter extends RecyclerView.Adapter<CommonViewHolder> {
         mContext = context;
         this.recyclerView = recyclerView;
         mLayoutInflater = LayoutInflater.from(context);
-    }
-
-    public void setDatas(CarsNewsBean datas) {
-        this.datas = datas;
-        notifyDataSetChanged();
     }
 
     @Override

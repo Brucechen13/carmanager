@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cc.carmanager.R;
-import com.cc.carmanager.adapt.CarsDetailAdapter;
+import com.cc.carmanager.adapt.CarsListAdapter;
 import com.cc.carmanager.bean.CarsItemBean;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class CarsDetailListActivity extends AppCompatActivity {
     private ArrayList<CarsItemBean> datas = new ArrayList<>();
-    private CarsDetailAdapter mAdapter;
+    private CarsListAdapter mAdapter;
 
     private RecyclerView mRecyclerView;
 
@@ -26,11 +26,11 @@ public class CarsDetailListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("info", "filter show");
-        setContentView(R.layout.activity_cars_filtershow);
+        setContentView(R.layout.activity_normal_recycler);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
-        mAdapter = new CarsDetailAdapter(this, datas, mRecyclerView);
+        mAdapter = new CarsListAdapter(this, datas, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
         getData();
     }

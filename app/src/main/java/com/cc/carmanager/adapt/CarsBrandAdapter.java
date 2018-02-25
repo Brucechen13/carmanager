@@ -9,20 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.cc.carmanager.R;
-import com.cc.carmanager.activity.CarsDetailActivity;
+import com.cc.carmanager.activity.CarsDetailListActivity;
 import com.cc.carmanager.adapt.holder.CommonViewHolder;
 import com.cc.carmanager.bean.BrandsItemBean;
 import com.cc.carmanager.bean.CarsBrandBean;
 import com.cc.carmanager.vollley.MySingleton;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -90,10 +88,12 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
         switch (getItemViewType(position)){
             case TYPE_HOT:
                 holder.setGridView(R.id.hot_cars, new
-                        HotCityAdapter((holder).getItemView().getContext(), listItem.subList(0,10)), new AdapterView.OnItemClickListener() {
+                        HotCityAdapter((holder).getItemView().getContext(), listItem.subList(0,8)), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
+                        Intent i = new Intent(mContext, CarsDetailListActivity.class);
+                        mContext.startActivity(i);
                     }
                 });
                 break;
@@ -169,7 +169,7 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
         @Override
         public void onClick(View v) {
             Log.d("RVA", "TextViewHolderListener :" + listItem.get(position) + "");
-            Intent i = new Intent(mContext, CarsDetailActivity.class);
+            Intent i = new Intent(mContext, CarsDetailListActivity.class);
             mContext.startActivity(i);
         }
     }

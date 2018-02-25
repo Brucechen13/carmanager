@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cc.carmanager.R;
+import com.cc.carmanager.adapt.CarsNewsBaseAdapter;
 import com.cc.carmanager.adapt.CarsNewsBigAdapter;
 import com.cc.carmanager.adapt.CarsNewsSmallAdapter;
-import com.cc.carmanager.adapt.holder.CommonViewHolder;
 import com.cc.carmanager.bean.CarsNewsBean;
 import com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior;
 import com.cc.carmanager.net.VolleyInstance;
@@ -25,7 +25,7 @@ import com.shizhefei.fragment.LazyFragment;
  */
 public class NewsFragment extends LazyFragment {
     private CarsNewsBean mRecommendBean;
-    private RecyclerView.Adapter<CommonViewHolder> normalRecyclerViewAdapter;
+    private CarsNewsBaseAdapter normalRecyclerViewAdapter;
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;

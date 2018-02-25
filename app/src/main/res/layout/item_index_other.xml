@@ -14,14 +14,14 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_left_image"
-            android:layout_width="@dimen/list_item_text_image_weight"
+            android:layout_width="@dimen/dimen_size_80dp"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/load_fail_small" />
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/list_item_text_image_height"
+            android:layout_height="@dimen/dimen_size_60dp"
             android:layout_marginLeft="@dimen/list_margin_left_and_right"
             android:layout_weight="1">
 
@@ -30,7 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text=""
                 android:textColor="@color/list_item_title_color"
                 android:textSize="@dimen/list_title_text_size" />
 
@@ -40,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/list_item_news_title"
                 android:lineSpacingExtra="5dp"
-                android:text=""
+                android:background="#1A12A94D"
                 android:textColor="@color/list_item_subtitle_color"
                 android:textSize="@dimen/list_content_text_size" />
         </RelativeLayout>

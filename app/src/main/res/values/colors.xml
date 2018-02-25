@@ -29,17 +29,32 @@
     <color name="tab_top_text_2">#ffeb413d</color>
     <color name="transparent">#00000000</color>
     <color name="white">#ffffffff</color>
+    <color name="graye">#eeeeee</color>
     <color name="login_button">#ff775025</color>
     <color name="text_noraml_color">#ff555555</color>
     <color name="text_selected">#ff42abe4</color>
 
     <color name="gray_text">#909497</color>
     <color name="black_title_color">#030303</color>
+    <color name="black3">#333333</color>
+    <color name="search_text">#FF888888</color>
+    <color name="bg_gray_pressed">#e8e8e8</color>
+
+    <color name="content_more">#FFB2B2B2</color>
 
     <color name="normal_bg_color">#ebebeb</color>
+    <color name="ho_place">#f0f0f0</color>
+    
+    <color name="search_bg">#FFF6F6F6</color>
 
     <color name="black_gray">#212121</color>
     <color name="black_font_color">#191919</color>
     <color name="fra_mine_bg_color">#edecec</color>
     <color name="fra_mine_item_bg_color">#ffffff</color>
+
+
+    <color name="green1">#7ac194</color>
+    <color name="green2">#56bc7b</color>
+    <color name="green3">#24a251</color>
+    <color name="green4">#50056f00</color>
 </resources>

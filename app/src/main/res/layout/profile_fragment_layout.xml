@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <!--账号登录的头像-->
         <LinearLayout
             android:id="@+id/fra_mine_user_ll"
@@ -22,65 +21,23 @@
 
             <ImageView
                 android:id="@+id/fra_mine_user_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ahlib_userpic_default"/>
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:onClick="onClick"
+                android:src="@mipmap/user_default_common" />
 
             <TextView
                 android:id="@+id/fra_mine_user_name_tv"
-                android:paddingTop="@dimen/fra_mine_item_padding_vertical"
-                android:paddingBottom="@dimen/fra_mine_item_padding_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login"/>
-        </LinearLayout>
-        <!--第三方等登录-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/fra_mine_item_bg_color">
-            <LinearLayout
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginBottom="@dimen/fra_mine_item_margin_vertical"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:src="@drawable/btn_login_qq_selector"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_marginBottom="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_height="@dimen/fra_mine_login_height"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-                <ImageView
-
-                    android:src="@drawable/btn_login_sina_selector"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_marginBottom="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_height="@dimen/fra_mine_login_height"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:src="@drawable/btn_login_wechat_selector"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_marginBottom="@dimen/fra_mine_item_margin_vertical"
-                    android:layout_height="@dimen/fra_mine_login_height"/>
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="立即登录"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black_title_color"
+                android:textSize="18sp" />
         </LinearLayout>
         <!--我的收藏-->
         <LinearLayout
@@ -103,12 +60,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/black_title_color"
                 android:text="@string/setting_save"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/android_list_idex"/>
+                android:src="@mipmap/icon_more"/>
         </LinearLayout>
         <!--设置-->
         <LinearLayout
@@ -130,12 +88,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/setting_save"/>
+                android:textColor="@color/black_title_color"
+                android:text="@string/setting"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/android_list_idex"/>
+                android:src="@mipmap/icon_more"/>
         </LinearLayout>
 
     </LinearLayout>

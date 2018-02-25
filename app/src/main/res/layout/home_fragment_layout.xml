@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="35dp"
         app:layout_behavior="com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior"
         app:layout_scrollFlags="scroll|enterAlways">
 
@@ -76,15 +77,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/index_recommend_more"
-                    android:textColor="@color/black_title_color"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textColor="@color/content_more"
+                    android:textSize="@dimen/text_size_12dp" />
 
                 <ImageView
+                    android:id="@+id/recommand_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_size_5dp"
                     android:layout_marginRight="@dimen/dimen_size_5dp"
-                    android:src="@mipmap/android_list_idex" />
+                    android:src="@mipmap/icon_more" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -102,18 +104,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#fffffbfa"
+        android:paddingLeft="5dp"
         android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingRight="5dp"
         android:paddingTop="5dp">
 
         <com.cc.carmanager.widget.CustomEditText
-            android:id="@+id/school_friend_member_search_input"
+            android:id="@+id/search_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/bg_search_input"
-            android:drawableLeft="@drawable/ic_search"
+            android:drawableLeft="@mipmap/icon_search_big"
             android:drawablePadding="5dp"
             android:drawableRight="@drawable/ic_edit_text_delbtn"
             android:focusable="false"
@@ -140,6 +142,6 @@
         android:id="@+id/fragment_tabmain_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/fragment_background"
         app:layout_behavior="com.cc.carmanager.behavior.uc.UcNewsContentBehavior" />
-
 </android.support.design.widget.CoordinatorLayout>

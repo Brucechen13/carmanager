@@ -2,28 +2,27 @@ package com.cc.carmanager.activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.Response;
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.base.BarBaseActivity;
+import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.util.URLImageParser;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 /**
  * Created by chenc on 2017/10/24.
@@ -68,11 +67,28 @@ public class NewsDisplayActivity extends BarBaseActivity {
         Spanned htmlSpan = Html.fromHtml(body, p, null);
         content.setText(htmlSpan);
 
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            link = extras.getString("NEWS_LINK");
-//        }
-        //getNews(link);
+        findViewById(R.id.comment).setOnClickListener(this);
+        findViewById(R.id.collect).setOnClickListener(this);
+        findViewById(R.id.share).setOnClickListener(this);
+        final EditText editText = (EditText)findViewById(R.id.text_input);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                Log.e("info", ""+i);
+                if(i == EditorInfo.IME_ACTION_SEND){
+                    ((InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                    String text = editText.getText().toString();
+                    Log.e("info", text);
+                    editText.clearFocus();
+                    editText.setText("");
+                    ToastUtils.makeLongText(text, NewsDisplayActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -115,20 +131,33 @@ public class NewsDisplayActivity extends BarBaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_news_details, menu);
-        return true;
+    public void onClick(View view){
+        super.onClick(view);
+        switch (view.getId()){
+            case R.id.comment:
+                Intent intent = new Intent(this, NewsCommentsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.share:
+                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                        {
+                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
+                                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
+                        };
+                new ShareAction(this).setDisplayList( displaylist )
+                        .withText( "呵呵" )
+                        .withSubject("subject")
+                        .open();
+                break;
+            case R.id.collect:
+                break;
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
 

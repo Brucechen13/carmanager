@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/imtv"
-    android:layout_width="70dp"
-
+    android:layout_width="match_parent"
     android:layout_marginTop="10dp"
     android:layout_height="80dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
 
     <com.android.volley.toolbox.NetworkImageView

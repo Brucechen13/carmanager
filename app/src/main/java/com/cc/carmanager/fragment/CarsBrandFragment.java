@@ -1,6 +1,5 @@
 package com.cc.carmanager.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,19 +11,13 @@ import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.adapt.CarsBrandAdapter;
-import com.cc.carmanager.bean.BrandsItemBean;
 import com.cc.carmanager.bean.CarsBrandBean;
 import com.cc.carmanager.net.VolleyInstance;
 import com.cc.carmanager.net.VolleyResult;
-import com.cc.carmanager.util.HanziToPinyin;
 import com.cc.carmanager.util.NetUrlsSet;
-import com.cc.carmanager.view.TypeFilterActivity;
-import com.cc.carmanager.view.PriceFilterActivity;
 import com.cc.carmanager.widget.SideBar;
 import com.google.gson.Gson;
 import com.shizhefei.fragment.LazyFragment;
-
-import java.util.ArrayList;
 
 /**
  * Created by zhouwei on 17/4/23.
@@ -55,9 +48,6 @@ public class CarsBrandFragment extends LazyFragment implements SideBar
 
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);
-
-       findViewById(R.id.filter_price).setOnClickListener(this);
-        findViewById(R.id.filter_brand).setOnClickListener(this);
     }
 
     @Override
@@ -119,18 +109,5 @@ public class CarsBrandFragment extends LazyFragment implements SideBar
 
     @Override
     public void onClick(View view) {
-        Intent i = null;
-        switch (view.getId()) {
-            case R.id.filter_price:
-                i = new Intent(this.getActivity(), PriceFilterActivity.class);
-                this.getActivity().startActivity(i);
-                break;
-            case R.id.filter_brand:
-                i = new Intent(this.getActivity(), TypeFilterActivity.class);
-                this.getActivity().startActivity(i);
-                break;
-            default:
-                break;
-        }
     }
 }

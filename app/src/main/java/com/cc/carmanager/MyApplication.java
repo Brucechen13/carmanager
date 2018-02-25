@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
@@ -13,10 +12,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.cc.carmanager.util.ScreenUtil;
 import com.lzy.ninegrid.NineGridView;
-import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.common.QueuedWork;
 
 /**
  * Created by chenc on 2017/10/24.
@@ -109,7 +105,7 @@ public class MyApplication extends Application {
     {
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
         PlatformConfig.setSinaWeibo("4230751943", "592a09c4f4c9573fdd6d67a7672cf7b3", "http://sns.whalecloud.com");
-        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+        PlatformConfig.setQQZone("1106433615", "EyF8HXWSu3ciLP1X");
     }
 
 }

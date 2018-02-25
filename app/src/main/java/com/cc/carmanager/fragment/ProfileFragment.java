@@ -1,42 +1,17 @@
 package com.cc.carmanager.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cc.carmanager.R;
-import com.cc.carmanager.activity.ForgetPasswordActivity;
-import com.cc.carmanager.activity.SignUpActivity;
-import com.cc.carmanager.util.RegexUtils;
-import com.cc.carmanager.util.Utils;
+import com.cc.carmanager.activity.LoginActivity;
 import com.cc.carmanager.widget.CircleDrawable;
-import com.cc.carmanager.widget.CustomEditText;
 import com.shizhefei.fragment.LazyFragment;
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.utils.SocializeUtils;
-
-import org.json.JSONObject;
-
-import java.util.Map;
-
-/**
- * Created by zhouwei on 17/4/23.
- */
 
 public class ProfileFragment extends LazyFragment implements View.OnClickListener {
     private ImageView userImg;
@@ -67,7 +42,7 @@ public class ProfileFragment extends LazyFragment implements View.OnClickListene
 
     protected void initDatas() {
         //设置圆形图片
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ahlib_userpic_default);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.user_default_common);
         CircleDrawable circleBitmap = new CircleDrawable(bitmap);
         userImg.setImageDrawable(circleBitmap);
 
@@ -85,9 +60,8 @@ public class ProfileFragment extends LazyFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fra_mine_user_img:
-//                Intent intent=new Intent(mContext, LoginActivity.class);
-//                //Log.d("aaa", "触发点击事件");
-//                startActivityForResult(intent,102);
+                Intent intent=new Intent(this.getActivity(), LoginActivity.class);
+                startActivityForResult(intent,102);
                 break;
         }
     }

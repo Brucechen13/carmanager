@@ -14,7 +14,7 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_left_image"
-            android:layout_width="@dimen/dimen_size_70dp"
+            android:layout_width="@dimen/dimen_size_80dp"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/load_fail_small" />
@@ -30,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:background="#1A12A94D"
                 android:text=""
                 android:textColor="@color/list_item_title_color"
                 android:textSize="@dimen/micro_text_size" />

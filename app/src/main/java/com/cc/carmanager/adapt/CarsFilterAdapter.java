@@ -3,24 +3,18 @@ package com.cc.carmanager.adapt;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.CarsDetailListActivity;
 import com.cc.carmanager.adapt.holder.CommonViewHolder;
-import com.cc.carmanager.vollley.MySingleton;
-import com.cc.carmanager.widget.MyGridView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <include layout="@layout/actionbar_layout" />
     <com.shizhefei.view.indicator.ScrollIndicatorView
         android:id="@+id/fragment_tabmain_indicator"
         android:layout_width="match_parent"

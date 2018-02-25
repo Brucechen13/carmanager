@@ -28,6 +28,10 @@
         android:theme="@style/AppTheme">
         <meta-data android:name="com.amap.api.v2.apikey" android:value="392a00acf4bfa77217a2dc9604724365">
         </meta-data>
+        <meta-data
+        android:name="UMENG_APPKEY"
+        android:value="59faa36d8f4a9d0e86000096" >
+    </meta-data>
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
@@ -46,7 +50,8 @@
 
         <activity android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.Base"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".activity.SignUpActivity"
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait"/>
@@ -60,6 +65,11 @@
             android:theme="@style/AppTheme.Base"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.PriceFilterActivity"/>
+        <activity android:name=".view.TypeFilterActivity" />
+        <activity android:name=".activity.CarsDetailListActivity" />
+        <activity android:name=".activity.CarsUserDetailActivity" />
+        <activity android:name=".activity.IndexSearchActivity" />
+        <activity android:name=".activity.NewsCommentsActivity" />
 
         <!-- 第三方登录 -->
         <!-- tencent -->
@@ -81,8 +91,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <activity android:name=".view.TypeFilterActivity" />
-        <activity android:name=".activity.CarsDetailListActivity" />
+        <activity
+            android:name=".wxapi.WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.amap.api.location.APSService"/>
     </application>
 
 </manifest>

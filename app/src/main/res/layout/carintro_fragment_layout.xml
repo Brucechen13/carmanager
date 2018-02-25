@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/iv_left_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/introduction_image_height"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_head_rect" />
+
+    <HorizontalScrollView
+        android:id="@+id/xinwen_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RadioGroup
+                android:id="@+id/xinwen_radiogroup"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:orientation="horizontal" >
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/xinwen_indicator"
+                android:layout_width="@dimen/dimen_size_60dp"
+                android:layout_height="2dp"
+                android:visibility="invisible"
+                android:background="#E30E0C" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E30E0C" />
+        </LinearLayout>
+
+    </HorizontalScrollView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/xinwen_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

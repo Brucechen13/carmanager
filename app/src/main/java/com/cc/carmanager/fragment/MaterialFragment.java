@@ -1,14 +1,17 @@
 package com.cc.carmanager.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.cc.carmanager.R;
+import com.cc.carmanager.activity.IndexArticleActivity;
 import com.cc.carmanager.adapt.CarsArticleAdapter;
 import com.cc.carmanager.bean.ArticleItemBean;
+import com.cc.carmanager.view.ImageTextView;
 import com.shizhefei.fragment.LazyFragment;
 
 import java.util.ArrayList;
@@ -22,7 +25,6 @@ public class MaterialFragment extends LazyFragment{
     private CarsArticleAdapter normalRecyclerViewAdapter;
 
     private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Handler handler = new Handler();
     private boolean isLoading;
     @Override
@@ -31,55 +33,36 @@ public class MaterialFragment extends LazyFragment{
 
         setContentView(R.layout.material_fragment_layout);
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.SwipeRefreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getRefreshData();
-                    }
-                }, 1000);
-            }
-        });
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
         normalRecyclerViewAdapter = new CarsArticleAdapter(getActivity(), mOneNewsItemList, mRecyclerView);
         mRecyclerView.setAdapter(normalRecyclerViewAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
 
+        initButtons();
+    }
+
+    private void initButtons(){
+        ImageTextView mKnowledge = (ImageTextView) findViewById(R.id.menu_knowledge_id);
+        ImageTextView mManual = (ImageTextView) findViewById(R.id.menu_manual_id);
+        ImageTextView mArticle = (ImageTextView) findViewById(R.id.menu_article_id);
+        initButton(mKnowledge, "知识大全",R.mipmap.icon_know, IndexArticleActivity.class);
+        initButton(mManual, "手册查询",R.mipmap.icon_book, IndexArticleActivity.class);
+        initButton(mArticle, "技术文章",R.mipmap.icon_techarticle, IndexArticleActivity.class);
+    }
+    private void initButton(ImageTextView view, final String title, int imageUrl, final Class jump_class) {
+        view.setText(title);
+        view.setImg(imageUrl);
+        view.setClick(new View.OnClickListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                if (lastVisibleItemPosition + 1 == normalRecyclerViewAdapter.getItemCount()) {
-                    boolean isRefreshing = swipeRefreshLayout.isRefreshing();
-                    if (isRefreshing) {
-                        normalRecyclerViewAdapter.notifyItemRemoved(normalRecyclerViewAdapter.getItemCount());
-                        return;
-                    }
-                    if (!isLoading) {
-                        isLoading = true;
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                getMoreData();
-                                isLoading = false;
-                            }
-                        }, 1000);
-                    }
-                }
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), jump_class);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", title);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
-
 
     @Override
     protected void onResumeLazy() {
@@ -135,7 +118,6 @@ public class MaterialFragment extends LazyFragment{
             mOneNewsItemList.add(bean);
         }
         normalRecyclerViewAdapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
         normalRecyclerViewAdapter.notifyItemRemoved(normalRecyclerViewAdapter.getItemCount());
     }
 
@@ -149,7 +131,6 @@ public class MaterialFragment extends LazyFragment{
             mOneNewsItemList.add(0, bean);
         }
         normalRecyclerViewAdapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
         normalRecyclerViewAdapter.notifyItemRemoved(normalRecyclerViewAdapter.getItemCount());
     }
 }

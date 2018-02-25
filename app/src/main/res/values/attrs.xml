@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="filterViewAttr">
+        <attr name="filterSearch" format="boolean"/>
+    </declare-styleable>
+</resources>

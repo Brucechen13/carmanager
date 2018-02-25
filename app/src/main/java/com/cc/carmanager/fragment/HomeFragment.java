@@ -18,10 +18,8 @@ import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.IndexArticleActivity;
-import com.cc.carmanager.activity.NewsDisplayActivity;
-import com.cc.carmanager.adapt.CarsNewsBigAdapter;
+import com.cc.carmanager.activity.IndexSearchActivity;
 import com.cc.carmanager.adapt.CarsNewsRecommandAdapter;
-import com.cc.carmanager.adapt.CarsNewsSmallAdapter;
 import com.cc.carmanager.bean.CarsNewsBean;
 import com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior;
 import com.cc.carmanager.net.VolleyInstance;
@@ -46,7 +44,7 @@ import java.util.List;
  * Created by zhouwei on 17/4/23.
  */
 
-public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehavior.OnPagerStateListener {
+public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehavior.OnPagerStateListener, View.OnClickListener {
     private IndicatorViewPager indicatorViewPager;
     private LayoutInflater inflate;
     public static final String INTENT_STRING_TABNAME = "intent_String_tabname";
@@ -74,17 +72,19 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
         colorBar.setWidth(ScreenUtil.dp2px(getActivity(), barWidth));
         indicator.setScrollBar(colorBar);
 
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
 
         indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
         inflate = LayoutInflater.from(getApplicationContext());
 
-        // 注意这里 的FragmentManager 是 getChildFragmentManager(); 因为是在Fragment里面
-        // 而在activity里面用FragmentManager 是 getSupportFragmentManager()
         indicatorViewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
         mPagerBehavior = (UcNewsHeaderPagerBehavior) ((CoordinatorLayout.LayoutParams) findViewById(R.id.id_uc_news_header_pager).getLayoutParams()).getBehavior();
         mPagerBehavior.setPagerStateListener(this);
+
+        findViewById(R.id.recommand_more).setOnClickListener(this);
+
+        findViewById(R.id.search_input).setOnClickListener(this);
 
         initBanner();
         initButtons();
@@ -97,11 +97,11 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
         ImageTextView mArticle = (ImageTextView) findViewById(R.id.menu_article_id);
         ImageTextView mStandard = (ImageTextView) findViewById(R.id.menu_standard_id);
         ImageTextView mMaterial = (ImageTextView) findViewById(R.id.menu_material_id);
-        initButton(mKnowledge, "知识大全",R.drawable.btn_login_sina_selector, IndexArticleActivity.class);
-        initButton(mManual, "手册查询",R.drawable.btn_login_sina_selector, IndexArticleActivity.class);
-        initButton(mArticle, "技术文章",R.drawable.btn_login_sina_selector, IndexArticleActivity.class);
-        initButton(mStandard, "技术标准",R.drawable.btn_login_sina_selector, IndexArticleActivity.class);
-        initButton(mMaterial, "自学教材",R.drawable.btn_login_sina_selector, IndexArticleActivity.class);
+        initButton(mKnowledge, "知识大全",R.mipmap.icon_know, IndexArticleActivity.class);
+        initButton(mManual, "手册查询",R.mipmap.icon_book, IndexArticleActivity.class);
+        initButton(mArticle, "技术文章",R.mipmap.icon_techarticle, IndexArticleActivity.class);
+        initButton(mStandard, "技术标准",R.mipmap.icon_techstand, IndexArticleActivity.class);
+        initButton(mMaterial, "自学教材",R.mipmap.icon_selflearn, IndexArticleActivity.class);
     }
     private void initButton(ImageTextView view, final String title, int imageUrl, final Class jump_class) {
         view.setText(title);
@@ -121,7 +121,7 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
     private void initBanner(){
         List<String> images = new ArrayList<>();
         for(int i = 0; i < 6; i ++){
-            images.add("http://www.runoob.com/wp-content/uploads/2014/07/carousalpluginmethod_demo.jpg");
+            images.add("http://img.pcauto.com.cn/images/pcautogallery/modle/article/201710/29/15092917392405740_660.webp");
         }
         Banner banner=(Banner) findViewById(R.id.item_recyclerview_header_banner);
         //设置指示器位置（当banner模式中有指示器时）
@@ -212,9 +212,27 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
 
     }
 
-    private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
+    @Override
+    public void onClick(View view) {
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.recommand_more:
+                intent = new Intent(getActivity(), IndexArticleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", "推荐阅读");
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+            case R.id.search_input:
+                intent = new Intent(getActivity(), IndexSearchActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
-        private String[] tabNames = {"新闻", "政策", "补贴", "技术标准", "技术动态"};
+private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
+
+        private String[] tabNames = {"新闻", "政策", "补贴", "标准", "动态"};
 
         public MyAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -222,21 +240,18 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
 
         @Override
         public int getCount() {
-            return tabNames.length+1;
+            return tabNames.length;
         }
 
         @Override
         public View getViewForTab(int position, View convertView, ViewGroup container) {
-            if (position < tabNames.length) {
-                convertView = inflate.inflate(R.layout.tab_top, container, false);
-                TextView textView = (TextView) convertView;
-                textView.setText(tabNames[position]);
-                textView.setPadding(ScreenUtil.dp2px(getActivity(), textPadding), 0, ScreenUtil.dp2px(getActivity(), textPadding), 0);
-            }else{
-                convertView = inflate.inflate(R.layout.tab_top_search, container, false);
-            }
+            convertView = inflate.inflate(R.layout.tab_top, container, false);
+            TextView textView = (TextView) convertView;
+            textView.setText(tabNames[position]);
+            textView.setPadding(ScreenUtil.dp2px(getActivity(), textPadding), 0, ScreenUtil.dp2px(getActivity(), textPadding), 0);
             return convertView;
         }
+
 
         @Override
         public Fragment getFragmentForPage(int position) {

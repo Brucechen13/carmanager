@@ -34,7 +34,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- 登录注册样式 -->
     <style name="login_edit_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
@@ -47,6 +46,17 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:drawableRight">@mipmap/ic_delete_grey</item>
         <item name="android:paddingLeft">15dp</item>
+    </style>
+
+    <!-- 车辆概述详情页导航栏样式 -->
+    <style name="radio_style">
+        <item name="android:layout_width">@dimen/dimen_size_60dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@drawable/content_textcolor</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>

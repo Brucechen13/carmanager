@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textColor="#88333333"
-        android:textSize="12sp"
-        android:text="描述描述描述描述描述描述描述描述"/>
+        android:textSize="@dimen/textSize_normal"
+        android:text="外观（84张）"/>
 
     <com.lzy.ninegrid.NineGridView
         android:id="@+id/nineGrid"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         app:ngv_gridSpacing="3dp"
-        app:ngv_maxSize="9"
+        app:ngv_maxSize="6"
         app:ngv_mode="grid"
         app:ngv_singleImageRatio="1"
         app:ngv_singleImageSize="150dp"/>

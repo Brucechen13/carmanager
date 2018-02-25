@@ -1,29 +1,22 @@
 package com.cc.carmanager.fragment;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.util.ScreenUtil;
 import com.shizhefei.fragment.LazyFragment;
-import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
 import com.shizhefei.view.indicator.slidebar.ColorBar;
-import com.shizhefei.view.viewpager.SViewPager;
 
 /**
  * Created by chenc on 2017/10/27.
@@ -113,8 +106,13 @@ public class CarsFragment extends LazyFragment {
 
         @Override
         public Fragment getFragmentForPage(int position) {
-            CarsBrandFragment mainFragment = new CarsBrandFragment();
-            return mainFragment;
+            if(position == 0) {
+                CarsBrandFragment mainFragment = new CarsBrandFragment();
+                return mainFragment;
+            }else {
+                CarsUserFragment mainFragment = new CarsUserFragment();
+                return mainFragment;
+            }
         }
     }
 }

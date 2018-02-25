@@ -34,8 +34,8 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_left_image"
-            android:layout_width="@dimen/list_item_car_image_weight"
-            android:layout_height="@dimen/list_item_car_image_weight"
+            android:layout_width="@dimen/dimen_size_60dp"
+            android:layout_height="@dimen/dimen_size_60dp"
             android:scaleType="fitXY"
             android:src="@drawable/default_head_rect" />
 

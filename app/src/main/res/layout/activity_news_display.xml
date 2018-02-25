@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
-
-
     <include layout="@layout/actionbar_layout" />
 
     <ScrollView
@@ -49,5 +47,56 @@
                 android:textColor="@android:color/black" />
         </LinearLayout>
     </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dimen_size_50dp"
+        android:background="#fffffbfa"
+        android:paddingLeft="@dimen/dimen_size_10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="@dimen/dimen_size_10dp"
+        android:paddingTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.cc.carmanager.widget.CustomEditText
+            android:id="@+id/text_input"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_size_30dp"
+            android:layout_weight = "1"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_search_input"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/ic_edit_text_delbtn"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:hint="写评论..."
+            android:imeOptions="actionSend"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textColorHint="#ffb5b5b5"
+            android:textSize="14sp" />
+        <ImageView
+            android:id="@+id/comment"
+            android:paddingLeft="@dimen/dimen_size_10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_comment"/>
+        <ImageView
+            android:id="@+id/collect"
+            android:paddingLeft="@dimen/dimen_size_10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_collect" />
+        <ImageView
+            android:id="@+id/share"
+            android:paddingLeft="@dimen/dimen_size_10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_share"  />
+    </LinearLayout>
 </LinearLayout>
 
