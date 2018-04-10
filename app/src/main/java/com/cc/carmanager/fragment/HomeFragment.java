@@ -17,16 +17,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cc.carmanager.R;
+import com.cc.carmanager.activity.ContentSearchActivity;
 import com.cc.carmanager.activity.IndexArticleActivity;
 import com.cc.carmanager.activity.IndexSearchActivity;
 import com.cc.carmanager.adapt.CarsNewsRecommandAdapter;
+import com.cc.carmanager.bean.BannerItemBean;
+import com.cc.carmanager.bean.BannerListBean;
 import com.cc.carmanager.bean.CarsNewsBean;
+import com.cc.carmanager.bean.NavListBean;
+import com.cc.carmanager.bean.NewsItemBean;
+import com.cc.carmanager.bean.NewsListBean;
 import com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior;
 import com.cc.carmanager.net.VolleyInstance;
 import com.cc.carmanager.net.VolleyResult;
 import com.cc.carmanager.util.GlideImageLoader;
 import com.cc.carmanager.util.NetUrlsSet;
 import com.cc.carmanager.util.ScreenUtil;
+import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.view.ImageTextView;
 import com.google.gson.Gson;
 import com.shizhefei.fragment.LazyFragment;
@@ -50,37 +57,23 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
     public static final String INTENT_STRING_TABNAME = "intent_String_tabname";
     public static final String INTENT_INT_INDEX = "intent_int_index";
     private int index;
-    private final int textPadding = 5;//dp
+    private final int textPadding = 20;//dp
     private final int barWidth = 42;//
 
     private UcNewsHeaderPagerBehavior mPagerBehavior;
     private CarsNewsRecommandAdapter recommandRecyclerViewAdapter;
 
+    private List<BannerItemBean> bannerData;
+
+
+    private String[] navNames;
+    private int[] navIds;
+
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
         setContentView(R.layout.home_fragment_layout);
-        Resources res = getResources();
 
-        Bundle bundle = getArguments();
-//		tabName = bundle.getString(INTENT_STRING_TABNAME);
-        //index = bundle.getInt(INTENT_INT_INDEX);
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.fragment_tabmain_viewPager);
-        ScrollIndicatorView indicator = (ScrollIndicatorView) findViewById(R.id.fragment_tabmain_indicator);
-        ColorBar colorBar = new ColorBar(getApplicationContext(), Color.RED, 5);
-        colorBar.setWidth(ScreenUtil.dp2px(getActivity(), barWidth));
-        indicator.setScrollBar(colorBar);
-
-        viewPager.setOffscreenPageLimit(3);
-
-        indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
-        inflate = LayoutInflater.from(getApplicationContext());
-
-        indicatorViewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
-
-        mPagerBehavior = (UcNewsHeaderPagerBehavior) ((CoordinatorLayout.LayoutParams) findViewById(R.id.id_uc_news_header_pager).getLayoutParams()).getBehavior();
-        mPagerBehavior.setPagerStateListener(this);
 
         findViewById(R.id.recommand_more).setOnClickListener(this);
 
@@ -89,6 +82,7 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
         initBanner();
         initButtons();
         initRecommands();
+        initNav();
     }
 
     private void initButtons(){
@@ -97,11 +91,11 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
         ImageTextView mArticle = (ImageTextView) findViewById(R.id.menu_article_id);
         ImageTextView mStandard = (ImageTextView) findViewById(R.id.menu_standard_id);
         ImageTextView mMaterial = (ImageTextView) findViewById(R.id.menu_material_id);
-        initButton(mKnowledge, "知识大全",R.mipmap.icon_know, IndexArticleActivity.class);
-        initButton(mManual, "手册查询",R.mipmap.icon_book, IndexArticleActivity.class);
-        initButton(mArticle, "技术文章",R.mipmap.icon_techarticle, IndexArticleActivity.class);
-        initButton(mStandard, "技术标准",R.mipmap.icon_techstand, IndexArticleActivity.class);
-        initButton(mMaterial, "自学教材",R.mipmap.icon_selflearn, IndexArticleActivity.class);
+        initButton(mKnowledge, "行业动态",R.mipmap.icon_know, IndexArticleActivity.class);
+        initButton(mManual, "购车指南",R.mipmap.icon_book, IndexArticleActivity.class);
+        initButton(mArticle, "用车指南",R.mipmap.icon_techarticle, IndexArticleActivity.class);
+        initButton(mStandard, "科普知识",R.mipmap.icon_techstand, IndexArticleActivity.class);
+        initButton(mMaterial, "技术资料",R.mipmap.icon_selflearn, IndexArticleActivity.class);
     }
     private void initButton(ImageTextView view, final String title, int imageUrl, final Class jump_class) {
         view.setText(title);
@@ -119,25 +113,48 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
     }
 
     private void initBanner(){
-        List<String> images = new ArrayList<>();
-        for(int i = 0; i < 6; i ++){
-            images.add("http://img.pcauto.com.cn/images/pcautogallery/modle/article/201710/29/15092917392405740_660.webp");
-        }
-        Banner banner=(Banner) findViewById(R.id.item_recyclerview_header_banner);
-        //设置指示器位置（当banner模式中有指示器时）
-        banner.setIndicatorGravity(BannerConfig.RIGHT);
-        //设置自动轮播，默认为true
-        banner.isAutoPlay(false);
-        //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
-        //设置banner样式
-        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
-        //设置图片加载器
-        banner.setImageLoader(new GlideImageLoader());
-        //设置图片集合
-        banner.setImages(images);
-        //banner设置方法全部调用完毕时最后调用
-        banner.start();
+        VolleyInstance.getVolleyInstance().startRequest(NetUrlsSet.URL_IMAGE_LIST, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                BannerListBean bannerListBean=gson.fromJson(resultStr,BannerListBean.class);
+                if(bannerListBean.isSuccess()){
+                    bannerData = bannerListBean.getData();
+                    List<String> images = new ArrayList<>();
+                    for(int i = 0; i < bannerData.size(); i ++){
+                        String picUrl = bannerData.get(i).getImageSrc();
+                        picUrl = "http://img.pcauto.com.cn/images/pcautogallery/modle/article/201710/29/15092917392405740_660.webp";
+                        images.add(picUrl);
+                    }
+                    Banner banner=(Banner) findViewById(R.id.item_recyclerview_header_banner);
+                    //设置指示器位置（当banner模式中有指示器时）
+                    banner.setIndicatorGravity(BannerConfig.RIGHT);
+                    //设置自动轮播，默认为true
+                    banner.isAutoPlay(false);
+                    //设置banner动画效果
+                    banner.setBannerAnimation(Transformer.DepthPage);
+                    //设置banner样式
+                    banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+                    //设置图片加载器
+                    banner.setImageLoader(new GlideImageLoader());
+                    //设置图片集合
+                    banner.setImages(images);
+                    //banner设置方法全部调用完毕时最后调用
+                    try {
+                        banner.start();
+                    }catch (Exception e){
+                        ToastUtils.makeShortText("轮播图出错", HomeFragment.this.getContext());
+                    }
+                }else{
+                    ToastUtils.makeShortText("轮播图出错", HomeFragment.this.getContext());
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
     }
 
     private void initRecommands(){
@@ -150,13 +167,59 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
     }
 
     private void initNews() {
-        VolleyInstance.getVolleyInstance().startRequest(NetUrlsSet.URL_NEW, new VolleyResult() {
+        String url_news = String.format(NetUrlsSet.URL_NEWS_LIST, 1, 0, 0, 10);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
             @Override
             public void success(String resultStr) {
                 Gson gson=new Gson();
-                CarsNewsBean mRecommendBean=gson.fromJson(resultStr,CarsNewsBean.class);
-                mRecommendBean.setNewslist(mRecommendBean.getNewslist().subList(0, 2));
-                recommandRecyclerViewAdapter.setDatas(mRecommendBean);
+                NewsListBean mRecommendBean=gson.fromJson(resultStr,NewsListBean.class);
+                if(mRecommendBean.isSuccess()){
+                    List<NewsItemBean> datas = mRecommendBean.getData().subList(0, 2);
+                    recommandRecyclerViewAdapter.setDatas(datas);
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", HomeFragment.this.getContext());
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
+    }
+
+    private void initNav(){
+        VolleyInstance.getVolleyInstance().startRequest(NetUrlsSet.URL_NAV_LIST, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                NavListBean navListBean=gson.fromJson(resultStr,NavListBean.class);
+                if(navListBean.isSuccess()){
+                    ViewPager viewPager = (ViewPager) findViewById(R.id.fragment_tabmain_viewPager);
+                    ScrollIndicatorView indicator = (ScrollIndicatorView) findViewById(R.id.fragment_tabmain_indicator);
+                    ColorBar colorBar = new ColorBar(getApplicationContext(), Color.RED, 5);
+                    colorBar.setWidth(ScreenUtil.dp2px(getActivity(), barWidth));
+                    indicator.setScrollBar(colorBar);
+
+                    viewPager.setOffscreenPageLimit(4);
+                    indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
+                    inflate = LayoutInflater.from(getApplicationContext());
+                    int size = navListBean.getData().size();
+                    navNames = new String[size];
+                    navIds = new int[size];
+                    for(int i = 0 ; i< navListBean.getData().size(); i ++){
+                        navNames[i] = navListBean.getData().get(i).getName();
+                        navIds[i] = navListBean.getData().get(i).getId();
+                    }
+
+                    mPagerBehavior = (UcNewsHeaderPagerBehavior) ((CoordinatorLayout.LayoutParams) findViewById(R.id.id_uc_news_header_pager).getLayoutParams()).getBehavior();
+                    mPagerBehavior.setPagerStateListener(HomeFragment.this);
+
+                    indicatorViewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+
+                }else{
+                    ToastUtils.makeShortText("轮播图出错", HomeFragment.this.getContext());
+                }
             }
 
             @Override
@@ -224,7 +287,7 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
                 startActivity(intent);
                 break;
             case R.id.search_input:
-                intent = new Intent(getActivity(), IndexSearchActivity.class);
+                intent = new Intent(getActivity(), ContentSearchActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -232,22 +295,20 @@ public class HomeFragment extends LazyFragment implements UcNewsHeaderPagerBehav
 
 private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
 
-        private String[] tabNames = {"新闻", "政策", "补贴", "标准", "动态"};
-
         public MyAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
         @Override
         public int getCount() {
-            return tabNames.length;
+            return navNames.length;
         }
 
         @Override
         public View getViewForTab(int position, View convertView, ViewGroup container) {
             convertView = inflate.inflate(R.layout.tab_top, container, false);
             TextView textView = (TextView) convertView;
-            textView.setText(tabNames[position]);
+            textView.setText(navNames[position]);
             textView.setPadding(ScreenUtil.dp2px(getActivity(), textPadding), 0, ScreenUtil.dp2px(getActivity(), textPadding), 0);
             return convertView;
         }
@@ -258,7 +319,7 @@ private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter
             NewsFragment mainFragment = new NewsFragment();
             mainFragment.setPagerBehavior(mPagerBehavior);
             Bundle bundle = new Bundle();
-            bundle.putInt("position", position);
+            bundle.putInt("position", navIds[position]);
             mainFragment.setArguments(bundle);
             return mainFragment;
         }

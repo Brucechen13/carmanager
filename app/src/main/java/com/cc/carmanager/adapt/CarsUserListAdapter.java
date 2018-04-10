@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * 用车指南适配器
  * Created by chenc on 2017/11/19.
  */
-public class CarsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CarsUserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
@@ -30,7 +30,7 @@ public class CarsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int failImage = R.drawable.load_fail;
     private int[] defaultImages = new int[]{defaultImage};
 
-    public CarsListAdapter(Context context, ArrayList<CarsItemBean> listItem, RecyclerView recyclerView) {
+    public CarsUserListAdapter(Context context, ArrayList<CarsItemBean> listItem, RecyclerView recyclerView) {
         mContext = context;
         this.recyclerView = recyclerView;
         this.listItem = listItem;
@@ -81,7 +81,7 @@ public class CarsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             v = view;
             mImageView = (NetworkImageView) view.findViewById(R.id.iv_left_image);
             carTitle = (TextView) view.findViewById(R.id.car_name);
-            tvLetter = (TextView) view.findViewById(R.id.car_type);
+            tvLetter = (TextView) view.findViewById(R.id.car_name);
             tvLine = (TextView) view.findViewById(R.id.contact_line);
         }
     }

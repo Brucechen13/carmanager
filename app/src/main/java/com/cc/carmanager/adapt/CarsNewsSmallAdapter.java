@@ -39,15 +39,17 @@ public class CarsNewsSmallAdapter extends CarsNewsBaseAdapter {
 
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
-        holder.setText(R.id.list_item_news_title,datas.getNewslist().get(position).getTitle());
-        holder.setText(R.id.list_item_news_subtitle,datas.getNewslist().get(position).getTime() + "2017-10-3");
-        holder.setNetworkImageView(R.id.iv_left_image,datas.getNewslist().get(position).getSmallpic(), defaultImage);
+        holder.setText(R.id.list_item_news_title,datas.get(position).getTitle());
+        holder.setNetworkImageView(R.id.iv_left_image,datas.get(position).getIconSrc(), defaultImage);
         holder.setItemClick(new TextViewHolderListener(position));
+        holder.setImgVisble(R.id.is_hot, datas.get(position).getIsHot() == 1?View.VISIBLE:View.GONE);
+        holder.setImgVisble(R.id.is_recom, datas.get(position).getIsRecommend() == 1?View.VISIBLE:View.GONE);
+        holder.setImgVisble(R.id.is_reup, datas.get(position).getIsUp() == 1?View.VISIBLE:View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.getNewslist().size();
+        return datas == null ? 0 : datas.size();
     }
 
     @Override
@@ -65,9 +67,9 @@ public class CarsNewsSmallAdapter extends CarsNewsBaseAdapter {
 
         @Override
         public void onClick(View v) {
-            Log.d("RVA", "TextViewHolderListener :" + datas.getNewslist().get(position) + "");
+            Log.d("RVA", "TextViewHolderListener :" + datas.get(position));
             Intent i = new Intent(mContext, NewsDisplayActivity.class);
-//            i.putExtra("NEWS_LINK", jsonLink);
+            i.putExtra("news_id", datas.get(position).getId());
             mContext.startActivity(i);
         }
     }

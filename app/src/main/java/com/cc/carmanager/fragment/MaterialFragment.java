@@ -5,28 +5,42 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.IndexArticleActivity;
 import com.cc.carmanager.adapt.CarsArticleAdapter;
+import com.cc.carmanager.adapt.CarsNewsBaseAdapter;
+import com.cc.carmanager.adapt.CarsNewsSmallAdapter;
 import com.cc.carmanager.bean.ArticleItemBean;
+import com.cc.carmanager.bean.NewsItemBean;
+import com.cc.carmanager.bean.NewsListBean;
+import com.cc.carmanager.net.VolleyInstance;
+import com.cc.carmanager.net.VolleyResult;
+import com.cc.carmanager.util.NetUrlsSet;
+import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.view.ImageTextView;
+import com.google.gson.Gson;
 import com.shizhefei.fragment.LazyFragment;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by zhouwei on 17/4/23.
  */
 
 public class MaterialFragment extends LazyFragment{
-    private ArrayList<ArticleItemBean> mOneNewsItemList = new ArrayList<>();
-    private CarsArticleAdapter normalRecyclerViewAdapter;
+    private ArrayList<NewsItemBean> mOneNewsItemList = new ArrayList<>();
+    private CarsNewsBaseAdapter normalRecyclerViewAdapter;
 
     private RecyclerView mRecyclerView;
-    private Handler handler = new Handler();
-    private boolean isLoading;
+    private static int navId = 7, subId = 0, pageSize=10;
+    private int currentPage= 0 ;
+
+
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
@@ -35,33 +49,8 @@ public class MaterialFragment extends LazyFragment{
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_recycler_view);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
-        normalRecyclerViewAdapter = new CarsArticleAdapter(getActivity(), mOneNewsItemList, mRecyclerView);
+        normalRecyclerViewAdapter = new CarsNewsSmallAdapter(getActivity(), mRecyclerView);
         mRecyclerView.setAdapter(normalRecyclerViewAdapter);
-
-        initButtons();
-    }
-
-    private void initButtons(){
-        ImageTextView mKnowledge = (ImageTextView) findViewById(R.id.menu_knowledge_id);
-        ImageTextView mManual = (ImageTextView) findViewById(R.id.menu_manual_id);
-        ImageTextView mArticle = (ImageTextView) findViewById(R.id.menu_article_id);
-        initButton(mKnowledge, "知识大全",R.mipmap.icon_know, IndexArticleActivity.class);
-        initButton(mManual, "手册查询",R.mipmap.icon_book, IndexArticleActivity.class);
-        initButton(mArticle, "技术文章",R.mipmap.icon_techarticle, IndexArticleActivity.class);
-    }
-    private void initButton(ImageTextView view, final String title, int imageUrl, final Class jump_class) {
-        view.setText(title);
-        view.setImg(imageUrl);
-        view.setClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), jump_class);
-                Bundle bundle = new Bundle();
-                bundle.putString("title", title);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -78,58 +67,77 @@ public class MaterialFragment extends LazyFragment{
 
     private void getIndexNews() {
         mOneNewsItemList.clear();
-        for(int i = 0; i < 10;i ++) {
-            ArticleItemBean bean = new ArticleItemBean();
-            bean.setIsCost(false);
-            bean.setFileSize(100);
-            bean.setPicUrl("http://assrt.net/images/logo_sub.jpg");
-            bean.setTitle("你好啊啊的期望多群无多");
-            bean.setUrl("http://assrt.net/images/logo_sub.jpg");
-            mOneNewsItemList.add(bean);
-        }
+        String url_news = String.format(NetUrlsSet.URL_NEWS_LIST, navId, subId, currentPage, pageSize);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                NewsListBean mRecommendBean=gson.fromJson(resultStr,NewsListBean.class);
+                if(mRecommendBean.isSuccess()){
+                    mOneNewsItemList.addAll(mRecommendBean.getData());
+                    normalRecyclerViewAdapter.setDatas(mOneNewsItemList);
+                    pageSize++;
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", MaterialFragment.this.getContext());
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
         normalRecyclerViewAdapter.notifyDataSetChanged();
-//        MySingleton.getInstance(getActivity().getApplicationContext()).getRequestQueue().add(
-//                RequestSingletonFactory.getInstance().getGETStringRequest(getActivity(), URLs.getUrl(tabName), new Response.Listener() {
-//                    @Override
-//                    public void onResponse(Object response) {
-//                        JSONObject obj;
-//                        try {
-//                            mOneNewsItemList.clear();
-//                            obj = new JSONObject(response.toString());
-//                            JSONArray itemArray = obj.getJSONArray(URLs.getUrlTag(tabName));
-//                            ArrayList<OneNewsItemBean> newsList = new Gson().fromJson(itemArray.toString(), Global.NewsItemType);
-//                            mOneNewsItemList.addAll(newsList);
-//                            normalRecyclerViewAdapter.notifyDataSetChanged();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }));
     }
 
     //初始化加载更多数据
     private void getMoreData() {
-        for (int i = 0; i < 10; i++) {
-            ArticleItemBean bean = new ArticleItemBean();
-            bean.setIsCost(false);
-            bean.setPicUrl("http://assrt.net/images/logo_sub.jpg");
-            bean.setTitle("你好啊啊的期望多群无多");
-            bean.setUrl("http://assrt.net/images/logo_sub.jpg");
-            mOneNewsItemList.add(bean);
-        }
+        String url_news = String.format(NetUrlsSet.URL_NEWS_LIST, navId, subId, currentPage, pageSize);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                NewsListBean mRecommendBean=gson.fromJson(resultStr,NewsListBean.class);
+                if(mRecommendBean.isSuccess()){
+                    mOneNewsItemList.addAll(mRecommendBean.getData());
+                    normalRecyclerViewAdapter.setDatas(mOneNewsItemList);
+                    pageSize++;
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", MaterialFragment.this.getContext());
+                }
+            }
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
         normalRecyclerViewAdapter.notifyDataSetChanged();
         normalRecyclerViewAdapter.notifyItemRemoved(normalRecyclerViewAdapter.getItemCount());
     }
 
     private void getRefreshData() {
-        for (int i = 0; i < 2; i++) {
-            ArticleItemBean bean = new ArticleItemBean();
-            bean.setIsCost(false);
-            bean.setPicUrl("http://assrt.net/images/logo_sub.jpg");
-            bean.setTitle("你好啊啊的期望多群无多");
-            bean.setUrl("http://assrt.net/images/logo_sub.jpg");
-            mOneNewsItemList.add(0, bean);
-        }
+        String url_news = String.format(Locale.CHINA, NetUrlsSet.URL_NEWS_LIST, navId, subId, 0, pageSize);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                NewsListBean mRecommendBean=gson.fromJson(resultStr,NewsListBean.class);
+                if(mRecommendBean.isSuccess()){
+                    for(NewsItemBean bean : mRecommendBean.getData()){
+                        if(!mOneNewsItemList.contains(bean)){
+                            mOneNewsItemList.add(bean);
+                        }
+                    }
+                    normalRecyclerViewAdapter.setDatas(mOneNewsItemList);
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", MaterialFragment.this.getContext());
+                }
+            }
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
         normalRecyclerViewAdapter.notifyDataSetChanged();
         normalRecyclerViewAdapter.notifyItemRemoved(normalRecyclerViewAdapter.getItemCount());
     }

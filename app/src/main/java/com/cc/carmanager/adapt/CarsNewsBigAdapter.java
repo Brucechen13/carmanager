@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.NewsDisplayActivity;
 import com.cc.carmanager.adapt.holder.CommonViewHolder;
-import com.youth.banner.BannerConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chenc on 2017/10/23.
@@ -41,43 +37,41 @@ public class CarsNewsBigAdapter extends CarsNewsBaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-//        if (position == 0) {
-//            return TYPE_BANNER;
-//        } else {
-//            return TYPE_ITEM;
-//        }
         return TYPE_ITEM;
     }
 
     @Override
     public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ITEM) {
-            CommonViewHolder newsVH = CommonViewHolder.getViewHolder(parent, R.layout.item_index_news);
-            return newsVH;
-        } else if (viewType == TYPE_BANNER) {
-            CommonViewHolder headerVH = CommonViewHolder.getViewHolder(parent, R.layout.item_banner);
-            return headerVH;
-        }
-        return null;
+//        if (viewType == TYPE_ITEM) {
+//        } else if (viewType == TYPE_BANNER) {
+//            CommonViewHolder headerVH = CommonViewHolder.getViewHolder(parent, R.layout.item_banner);
+//            return headerVH;
+//        }
+//        return null;
+        CommonViewHolder newsVH = CommonViewHolder.getViewHolder(parent, R.layout.item_index_news);
+        return newsVH;
     }
 
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
         switch (getItemViewType(position)){
-            case TYPE_BANNER:
-                Log.i(TAG, "onBindViewHolder BannerViewHolder");
-
-                List<String> imgUrls = new ArrayList<>();
-                for (int i = 0; i < datas.getFocusimg().size(); i++) {
-                    imgUrls.add(datas.getFocusimg().get(i).getImgurl());
-                }
-                holder.setBanner(R.id.item_recyclerview_header_banner, BannerConfig.RIGHT, 3000, BannerConfig.CIRCLE_INDICATOR, imgUrls);
-                break;
+//            case TYPE_BANNER:
+//                Log.i(TAG, "onBindViewHolder BannerViewHolder");
+//
+//                List<String> imgUrls = new ArrayList<>();
+//                for (int i = 0; i < datas.getFocusimg().size(); i++) {
+//                    imgUrls.add(datas.getFocusimg().get(i).getImgurl());
+//                }
+//                holder.setBanner(R.id.item_recyclerview_header_banner, BannerConfig.RIGHT, 3000, BannerConfig.CIRCLE_INDICATOR, imgUrls);
+//                break;
             case TYPE_ITEM:
-                holder.setText(R.id.index_news_title,datas.getNewslist().get(position).getTitle());
-                holder.setText(R.id.index_news_time,datas.getNewslist().get(position).getTime() + "2017-10-3");
-                holder.setNetworkImageView(R.id.index_news_image,datas.getNewslist().get(position).getSmallpic(), defaultImage);
+                holder.setText(R.id.index_news_title,datas.get(position).getTitle());
+                holder.setText(R.id.index_news_time,datas.get(position).getPublishTime().getDateTime());
+                holder.setNetworkImageView(R.id.index_news_image,datas.get(position).getIconSrc(), defaultImage);
                 holder.setItemClick(new TextViewHolderListener(position));
+                holder.setImgVisble(R.id.is_hot, datas.get(position).getIsHot() == 1?View.VISIBLE:View.GONE);
+                holder.setImgVisble(R.id.is_recom, datas.get(position).getIsRecommend() == 1?View.VISIBLE:View.GONE);
+                holder.setImgVisble(R.id.is_reup, datas.get(position).getIsUp() == 1?View.VISIBLE:View.GONE);
                 break;
             default:
                 break;
@@ -86,7 +80,7 @@ public class CarsNewsBigAdapter extends CarsNewsBaseAdapter {
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.getNewslist().size();
+        return datas == null ? 0 : datas.size();
     }
 
     @Override
@@ -104,9 +98,9 @@ public class CarsNewsBigAdapter extends CarsNewsBaseAdapter {
 
         @Override
         public void onClick(View v) {
-            Log.d("RVA", "TextViewHolderListener :" + datas.getNewslist().get(position) + "");
+            Log.d("RVA", "TextViewHolderListener :" + datas.get(position));
             Intent i = new Intent(mContext, NewsDisplayActivity.class);
-//            i.putExtra("NEWS_LINK", jsonLink);
+            i.putExtra("news_id", datas.get(position).getId());
             mContext.startActivity(i);
         }
     }

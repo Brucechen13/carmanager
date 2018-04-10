@@ -13,10 +13,12 @@ import com.cc.carmanager.adapt.CarsNewsBaseAdapter;
 import com.cc.carmanager.adapt.CarsNewsBigAdapter;
 import com.cc.carmanager.adapt.CarsNewsSmallAdapter;
 import com.cc.carmanager.bean.CarsNewsBean;
+import com.cc.carmanager.bean.NewsListBean;
 import com.cc.carmanager.behavior.uc.UcNewsHeaderPagerBehavior;
 import com.cc.carmanager.net.VolleyInstance;
 import com.cc.carmanager.net.VolleyResult;
 import com.cc.carmanager.util.NetUrlsSet;
+import com.cc.carmanager.util.ToastUtils;
 import com.google.gson.Gson;
 import com.shizhefei.fragment.LazyFragment;
 
@@ -24,7 +26,6 @@ import com.shizhefei.fragment.LazyFragment;
  * Created by chenc on 2017/10/23.
  */
 public class NewsFragment extends LazyFragment {
-    private CarsNewsBean mRecommendBean;
     private CarsNewsBaseAdapter normalRecyclerViewAdapter;
 
     private RecyclerView mRecyclerView;
@@ -32,7 +33,10 @@ public class NewsFragment extends LazyFragment {
     private Handler handler = new Handler();
     private boolean isLoading;
 
-    private int position;
+    private static int navId = 2;
+    private static int pageSize=10;
+    private int subId = 1;
+    private int currentPage = 1;
 
     protected Context mContext;
     @Override
@@ -53,7 +57,7 @@ public class NewsFragment extends LazyFragment {
         setContentView(R.layout.news_fragment_layout);
 
         Bundle bundle = getArguments();
-        position = bundle.getInt("position");
+        subId = bundle.getInt("position");
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.SwipeRefreshLayout);
@@ -75,7 +79,7 @@ public class NewsFragment extends LazyFragment {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);//这里用线性显示 类似于listview
 
-        if(position == 0) {
+        if(subId == 1) {
             normalRecyclerViewAdapter = new CarsNewsBigAdapter(getActivity(), mRecyclerView);
         }else{
             normalRecyclerViewAdapter = new CarsNewsSmallAdapter(getActivity(), mRecyclerView);
@@ -127,12 +131,17 @@ public class NewsFragment extends LazyFragment {
 
 
     private void initNews() {
-        VolleyInstance.getVolleyInstance().startRequest(NetUrlsSet.URL_NEW, new VolleyResult() {
+        String url_news = String.format(NetUrlsSet.URL_NEWS_LIST, navId, subId, currentPage, pageSize);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
             @Override
             public void success(String resultStr) {
                 Gson gson=new Gson();
-                mRecommendBean=gson.fromJson(resultStr,CarsNewsBean.class);
-                normalRecyclerViewAdapter.setDatas(mRecommendBean);
+                NewsListBean mRecommendBean=gson.fromJson(resultStr,NewsListBean.class);
+                if(mRecommendBean.isSuccess()){
+                    normalRecyclerViewAdapter.setDatas(mRecommendBean.getData());
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", NewsFragment.this.getContext());
+                }
             }
 
             @Override

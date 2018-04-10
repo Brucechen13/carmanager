@@ -4,8 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layerType="hardware"
     xmlns:tools="http://schemas.android.com/tools">
     <include layout="@layout/actionbar_layout" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,6 +47,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black" />
+
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </WebView>
         </LinearLayout>
     </ScrollView>
 
@@ -90,13 +99,19 @@
             android:paddingLeft="@dimen/dimen_size_10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_collect" />
+            android:src="@mipmap/bar_2_unselect" />
         <ImageView
-            android:id="@+id/share"
+            android:id="@+id/like"
             android:paddingLeft="@dimen/dimen_size_10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_share"  />
+            android:src="@mipmap/bar_3_unselect"  />
+        <!--<ImageView-->
+            <!--android:id="@+id/share"-->
+            <!--android:paddingLeft="@dimen/dimen_size_10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@mipmap/icon_share"  />-->
     </LinearLayout>
 </LinearLayout>
 

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.CarsDetailActivity;
+import com.cc.carmanager.adapt.holder.CommonViewHolder;
+import com.cc.carmanager.bean.CommentsItemBean;
 import com.cc.carmanager.bean.NewsCommentsBean;
 
 import java.util.List;
@@ -18,60 +20,31 @@ import java.util.List;
  * Created by chenc on 2018/1/2.
  */
 
-public class CarsNewsCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CarsNewsCommentsAdapter extends RecyclerView.Adapter<CommonViewHolder>{
 
-    private final LayoutInflater mLayoutInflater;
-    private final Context mContext;
     private RecyclerView recyclerView;
-    private List<NewsCommentsBean> listItem;
+    private List<CommentsItemBean> datas;
 
-    public CarsNewsCommentsAdapter(Context context, List<NewsCommentsBean> listItem, RecyclerView recyclerView) {
-        mContext = context;
+    public CarsNewsCommentsAdapter(Context context, List<CommentsItemBean> listItem, RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
-        this.listItem = listItem;
-        mLayoutInflater = LayoutInflater.from(context);
+        this.datas = listItem;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View hold = mLayoutInflater.inflate(R.layout.item_news_comment, parent, false);
-        return new CarsListAdapter.CarViewHolder(hold);
+    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        CommonViewHolder newsVH = CommonViewHolder.getViewHolder(parent, R.layout.item_news_comment);
+        return newsVH;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(CommonViewHolder holder, int position) {
+        holder.setText(R.id.tv_username,datas.get(position).getUserName());
+        holder.setText(R.id.tv_comment,datas.get(position).getContent());
+        holder.setText(R.id.tv_time,datas.get(position).getAddTime().getFullTime());
     }
 
     @Override
     public int getItemCount() {
-        return listItem == null ? 0 : listItem.size();
+        return datas == null ? 0 : datas.size();
     }
-
-    public static class CarViewHolder extends RecyclerView.ViewHolder {
-        TextView carTitle;
-
-        TextView tvLetter;
-        TextView tvLine;
-
-        View v;
-
-        CarViewHolder(View view) {
-            super(view);
-            v = view;
-            carTitle = (TextView) view.findViewById(R.id.car_name);
-            tvLetter = (TextView) view.findViewById(R.id.car_type);
-            tvLine = (TextView) view.findViewById(R.id.contact_line);
-        }
-    }
-
-    class TextViewHolderListener implements View.OnClickListener {
-        int position;
-        TextViewHolderListener(int i) {
-            position = i;
-        }
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(mContext, CarsDetailActivity.class);
-            mContext.startActivity(i);
-        }
-    }}
+}

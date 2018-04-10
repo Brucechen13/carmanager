@@ -138,6 +138,18 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
     /**
      * 为ImageView设置图片(重载)
      * @param resId 控件Id
+     * @param visible 需要设置的图片的可见性
+     * @return
+     */
+    public CommonViewHolder setImgVisble(int resId,int visible) {
+        ImageView imageView=getView(resId);
+        imageView.setVisibility(visible);
+        return this;
+    }
+
+    /**
+     * 为ImageView设置图片(重载)
+     * @param resId 控件Id
      * @param bitmap 需要设置的图片的bitmap(这里应该是网络图片获取后的bitmap)
      * @return
      */

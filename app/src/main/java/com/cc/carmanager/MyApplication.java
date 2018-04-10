@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.cc.carmanager.util.LoginHelper;
 import com.cc.carmanager.util.ScreenUtil;
 import com.lzy.ninegrid.NineGridView;
 import com.umeng.socialize.PlatformConfig;

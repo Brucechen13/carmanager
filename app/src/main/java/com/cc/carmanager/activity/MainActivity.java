@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.cc.carmanager.R;
 import com.cc.carmanager.fragment.CarsFragment;
 import com.cc.carmanager.fragment.HomeFragment;
-import com.cc.carmanager.fragment.MapsFragment;
+import com.cc.carmanager.fragment.MapFragment;
 import com.cc.carmanager.fragment.MaterialFragment;
 import com.cc.carmanager.fragment.ProfileFragment;
 import com.cc.carmanager.util.ToastUtils;
@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         //检查版本是否大于M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE},
                         MY_PERMISSIONS_REQUEST_CALL_LOCATION);
             }else {
                 ToastUtils.makeShortText("权限已申请", this);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             } else if(position == 1){
                 mainFragment = new CarsFragment();
             }else if(position == 2){
-                mainFragment = new MapsFragment();
+                mainFragment = new MapFragment();
             }else if(position == 3) {
                 mainFragment = new MaterialFragment();
             }else{

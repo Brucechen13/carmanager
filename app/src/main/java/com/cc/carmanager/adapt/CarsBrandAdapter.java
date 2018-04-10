@@ -26,16 +26,14 @@ import java.util.List;
 /**
  * Created by chenc on 2017/10/26.
  */
-public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  implements SectionIndexer {
+public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder> {// implements SectionIndexer
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_HOT = 1;
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private RecyclerView recyclerView;
-    private CarsBrandBean datas;
-    private List<BrandsItemBean> listItem;
-
+    private List<CarsBrandBean.CarBrandBean> datas;
 
     int defaultImage = R.drawable.load_fail;
     int failImage = R.drawable.load_fail;
@@ -47,28 +45,18 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public void setDatas(CarsBrandBean datas) {
+    public void setDatas(List<CarsBrandBean.CarBrandBean> datas) {
         this.datas = datas;
-        listItem = new ArrayList<>();
-        for (CarsBrandBean.CarBrandBean bean : datas.getBrandlist()){
-            for (CarsBrandBean.CarBean car : bean.getList()){
-                BrandsItemBean item = new BrandsItemBean();
-                item.setName(car.getName());
-                item.setImgurl(car.getImgurl());
-                item.setFirstChar(bean.getLetter().charAt(0));
-                listItem.add(item);
-            }
-        }
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_HOT;
-        } else {
-            return TYPE_ITEM;
-        }
+//        if (position == 0) {
+//            return TYPE_HOT;
+//        } else {
+//        }
+        return TYPE_ITEM;
     }
 
     @Override
@@ -87,24 +75,24 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
     public void onBindViewHolder(CommonViewHolder holder, int position) {
         switch (getItemViewType(position)){
             case TYPE_HOT:
-                holder.setGridView(R.id.hot_cars, new
-                        HotCityAdapter((holder).getItemView().getContext(), listItem.subList(0,8)), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        Intent i = new Intent(mContext, CarsDetailListActivity.class);
-                        mContext.startActivity(i);
-                    }
-                });
+//                holder.setGridView(R.id.hot_cars, new
+//                        HotCityAdapter((holder).getItemView().getContext(), listItem.subList(0,8)), new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view,
+//                                            int position, long id) {
+//                        Intent i = new Intent(mContext, CarsDetailListActivity.class);
+//                        mContext.startActivity(i);
+//                    }
+//                });
                 break;
             case TYPE_ITEM:
-                holder.setText(R.id.contact_title,listItem.get(position).getName());
-                holder.setNetworkImageView(R.id.iv_left_image,listItem.get(position).getImgurl(), defaultImage);
+                holder.setText(R.id.contact_title,datas.get(position).getBrandName());
+                holder.setNetworkImageView(R.id.iv_left_image,datas.get(position).getIconSrc(), defaultImage);
                 holder.setItemClick(new TextViewHolderListener(position));
 
-                if(position < 2 || (listItem.get(position - 1).getFirstChar() !=
-                        listItem.get(position).getFirstChar())) {
-                    holder.setText(R.id.contact_catalog, String.valueOf(listItem.get(position).getFirstChar()));
+                if(false && (position < 2 || (datas.get(position - 1).getBrandName() !=
+                        datas.get(position).getBrandName()))) {
+                    holder.setText(R.id.contact_catalog, String.valueOf(datas.get(position).getBrandName()));
 
                     holder.getView(R.id.contact_catalog).setVisibility(View.VISIBLE);
                     holder.getView(R.id.contact_line).setVisibility(View.VISIBLE);
@@ -120,46 +108,9 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
 
     @Override
     public int getItemCount() {
-        return listItem == null ? 0 : listItem.size();
+        return datas == null ? 0 : datas.size();
     }
 
-    class HotCityAdapter extends BaseAdapter {
-        private Context context;
-        private LayoutInflater inflater;
-        private List<BrandsItemBean> hotCitys;
-
-        public HotCityAdapter(Context context, List<BrandsItemBean> hotCitys) {
-            this.context = context;
-            inflater = LayoutInflater.from(this.context);
-            this.hotCitys = hotCitys;
-        }
-
-        @Override
-        public int getCount() {
-            return hotCitys.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.item_car_hot, null);
-            TextView city = (TextView) convertView.findViewById(R.id.contact_title);
-            city.setText(hotCitys.get(position).getName());
-            NetworkImageView networkImageView = (NetworkImageView) convertView.findViewById(R.id.iv_left_image);
-            networkImageView.setImageUrl(hotCitys.get(position).getImgurl(),
-                    MySingleton.getInstance().getImageLoader());
-            return convertView;
-        }
-    }
 
     class TextViewHolderListener implements View.OnClickListener {
         int position;
@@ -168,30 +119,31 @@ public class CarsBrandAdapter extends RecyclerView.Adapter<CommonViewHolder>  im
         }
         @Override
         public void onClick(View v) {
-            Log.d("RVA", "TextViewHolderListener :" + listItem.get(position) + "");
+            Log.d("RVA", "TextViewHolderListener :" + datas.get(position) + "");
             Intent i = new Intent(mContext, CarsDetailListActivity.class);
+            i.putExtra("id", datas.get(position).getId());
             mContext.startActivity(i);
         }
     }
-
-    @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
-
-    @Override
-    public int getPositionForSection(int section) {
-        for (int i = 0; i < listItem.size(); i++) {
-            char firstChar = listItem.get(i).getFirstChar();
-            if (firstChar == section) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    @Override
-    public int getSectionForPosition(int i) {
-        return 0;
-    }
+//
+//    @Override
+//    public Object[] getSections() {
+//        return new Object[0];
+//    }
+//
+//    @Override
+//    public int getPositionForSection(int section) {
+//        for (int i = 0; i < datas.size(); i++) {
+//            char firstChar = datas.get(i).getFirstChar();
+//            if (firstChar == section) {
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
+//
+//    @Override
+//    public int getSectionForPosition(int i) {
+//        return 0;
+//    }
 }

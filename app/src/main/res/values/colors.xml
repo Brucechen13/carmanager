@@ -36,6 +36,7 @@
 
     <color name="gray_text">#909497</color>
     <color name="black_title_color">#030303</color>
+    <color name="black_text">#FF18191A</color>
     <color name="black3">#333333</color>
     <color name="search_text">#FF888888</color>
     <color name="bg_gray_pressed">#e8e8e8</color>
@@ -51,6 +52,16 @@
     <color name="black_font_color">#191919</color>
     <color name="fra_mine_bg_color">#edecec</color>
     <color name="fra_mine_item_bg_color">#ffffff</color>
+
+    <!-- 答题 -->
+    <color name="practice_test_no_text">#2b89e9</color>
+    <color name="practice_test_content_text">#2f2f2f</color>
+    <color name="practice_test_result_text">#9a9a9a</color>
+    <color name="practice_test_result_right_text">#61bc31</color>
+    <color name="practice_test_result_wrong_text">#d53235</color>
+    <color name="practice_test_result_statistics_text">#2991f4</color>
+    <color name="practice_test_result_detail_text">#ab8b28</color>
+    <color name="my_error_question_text_black">#333333</color>
 
 
     <color name="green1">#7ac194</color>

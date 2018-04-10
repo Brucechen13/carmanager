@@ -33,11 +33,11 @@
             android:textSize="45sp"
             android:visibility="gone"/>
 
-        <com.cc.carmanager.widget.SideBar
-            android:id="@+id/school_friend_sidrbar"
-            android:layout_width="20dp"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right"/>
+        <!--<com.cc.carmanager.widget.SideBar-->
+            <!--android:id="@+id/school_friend_sidrbar"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_gravity="right"/>-->
     </FrameLayout>
 
 </LinearLayout>

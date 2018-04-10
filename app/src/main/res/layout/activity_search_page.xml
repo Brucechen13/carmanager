@@ -37,7 +37,6 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="10"
             android:background="@drawable/bg_search_input"
-            android:drawableLeft="@mipmap/icon_search_big"
             android:drawablePadding="5dp"
             android:drawableRight="@drawable/ic_edit_text_delbtn"
             android:freezesText="true"

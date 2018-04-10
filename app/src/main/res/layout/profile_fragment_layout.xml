@@ -39,8 +39,9 @@
                 android:textColor="@color/black_title_color"
                 android:textSize="18sp" />
         </LinearLayout>
-        <!--我的收藏-->
+        <!--我的评论-->
         <LinearLayout
+            android:id="@+id/settle_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
@@ -61,15 +62,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/black_title_color"
-                android:text="@string/setting_save"/>
+                android:text="@string/setting_comment"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/icon_more"/>
         </LinearLayout>
-        <!--设置-->
+        <!--我的收藏-->
         <LinearLayout
+            android:id="@+id/settle_collect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/fra_mine_item_padding_horizontal"
@@ -89,7 +91,102 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/black_title_color"
-                android:text="@string/setting"/>
+                android:text="@string/setting_collect"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_more"/>
+        </LinearLayout>
+
+        <!--我的点赞-->
+        <LinearLayout
+            android:id="@+id/settle_like"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
+            android:background="@color/fra_mine_item_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/fra_mine_item_padding_horizontal"
+            android:paddingRight="@dimen/fra_mine_item_padding_horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ahlib_icon_collection_p2"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black_title_color"
+                android:text="@string/setting_like"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_more"/>
+        </LinearLayout>
+
+
+        <!--我的答题-->
+        <LinearLayout
+            android:id="@+id/settle_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
+            android:background="@color/fra_mine_item_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/fra_mine_item_padding_horizontal"
+            android:paddingRight="@dimen/fra_mine_item_padding_horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ahlib_icon_collection_p2"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black_title_color"
+                android:text="@string/setting_question"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_more"/>
+        </LinearLayout>
+
+
+        <!--我的咨询-->
+        <LinearLayout
+            android:id="@+id/settle_ask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fra_mine_item_margin_vertical"
+            android:background="@color/fra_mine_item_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/fra_mine_item_padding_horizontal"
+            android:paddingRight="@dimen/fra_mine_item_padding_horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ahlib_icon_collection_p2"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black_title_color"
+                android:text="@string/setting_ask"/>
 
             <ImageView
                 android:layout_width="wrap_content"

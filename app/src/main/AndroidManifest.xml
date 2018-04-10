@@ -18,6 +18,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- 加入访问权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!-- 否则不能监听每个状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
 
     <application
         android:name=".MyApplication"
@@ -25,7 +30,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="gf0YBWhrMVmRG9tvaEYvh5IbzApnkcXF" />
         <meta-data android:name="com.amap.api.v2.apikey" android:value="392a00acf4bfa77217a2dc9604724365">
         </meta-data>
         <meta-data
@@ -69,7 +78,14 @@
         <activity android:name=".activity.CarsDetailListActivity" />
         <activity android:name=".activity.CarsUserDetailActivity" />
         <activity android:name=".activity.IndexSearchActivity" />
+        <activity android:name=".activity.ContentSearchActivity" />
         <activity android:name=".activity.NewsCommentsActivity" />
+        <activity android:name=".activity.CarSeriesConfigAcitivity" />
+        <activity android:name=".activity.CarSeriesPicActivity" />
+        <activity android:name=".activity.AnswerQuestionActivity" />
+        <activity android:name=".activity.ComsumerAskActivity" />
+        <activity android:name=".activity.MyErrorQuestionActivity" />
+        <activity android:name=".activity.MyErrorQuestionDetailActivity" />
 
         <!-- 第三方登录 -->
         <!-- tencent -->
@@ -92,17 +108,31 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name=".wxapi.WBShareActivity"
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:launchMode="singleTask"
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <service android:name="com.amap.api.location.APSService"/>
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
     </application>
 
 </manifest>

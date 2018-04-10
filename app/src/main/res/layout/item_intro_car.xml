@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="@dimen/dimen_size_10dp"
-    android:paddingLeft="@dimen/dimen_size_10dp"
-    android:paddingRight="@dimen/dimen_size_10dp">
-    <TextView
+    android:layout_height="wrap_content">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize_normal"
+        android:paddingTop="@dimen/dimen_size_10dp"
+        android:paddingLeft="@dimen/dimen_size_10dp"
+        android:paddingRight="@dimen/dimen_size_10dp"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/car_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize_title"
         android:textColor="@color/black_title_color"
         android:text="新款奥迪"/>
     <TextView
+        android:id="@+id/car_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/micro_text_size"
+        android:paddingTop="@dimen/dimen_size_10dp"
+        android:paddingBottom="@dimen/dimen_size_10dp"
         android:textColor="@color/gray_text"
         android:text="厂商指导价110万" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
+        <com.cc.carmanager.widget.DrawableCenterTextView
+            android:id="@+id/car_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/micro_text_size"
             android:textColor="@color/gray_text"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:drawableLeft="@mipmap/icon_share"
-            android:drawablePadding="@dimen/dimen_size_10dp"
-            android:text="图片" />
-        <TextView
+            android:text="图片"  />
+        <com.cc.carmanager.widget.DrawableCenterTextView
+            android:id="@+id/car_config"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/micro_text_size"
             android:textColor="@color/gray_text"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:drawableLeft="@mipmap/icon_share"
-            android:text="配置" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/micro_text_size"
-            android:textColor="@color/gray_text"
-            android:gravity="center"
-            android:drawableLeft="@mipmap/icon_share"
-            android:text="对比" />
+            android:text="配置"  />
     </LinearLayout>
-
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
+        android:background="@color/gray_line_color"/>
 </LinearLayout>

@@ -45,7 +45,7 @@ public class IndexSearchActivity extends AppCompatActivity implements FilterView
 
     private void initData() {
         List<String> list = new ArrayList<>();
-        list.add("电影");
+        list.add("新闻");
         list.add("政策");
         list.add("补贴标准");
         list.add("技术标准");
@@ -82,7 +82,7 @@ public class IndexSearchActivity extends AppCompatActivity implements FilterView
                 this.finish();
                 break;
             case R.id.action_bar_comint_tv:
-                Intent intent = new Intent(this, IndexArticleActivity.class);
+                Intent intent = new Intent(this, ContentSearchActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("title", "推荐阅读");
                 intent.putExtras(bundle);
@@ -91,7 +91,7 @@ public class IndexSearchActivity extends AppCompatActivity implements FilterView
         }
     }
 
-    public class SpinnerAdapter extends BaseAdapter {
+    public static class SpinnerAdapter extends BaseAdapter {
         private List<String> mList;
         private Context mContext;
 
@@ -124,7 +124,5 @@ public class IndexSearchActivity extends AppCompatActivity implements FilterView
             item_spinner_tv.setText(mList.get(i));
             return view;
         }
-
-
     }
 }

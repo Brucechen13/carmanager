@@ -16,7 +16,7 @@ import com.cc.carmanager.activity.base.BarBaseActivity;
 import com.cc.carmanager.fragment.cars.CarsAppearFragment;
 import com.cc.carmanager.fragment.cars.CarsConfigFragment;
 import com.cc.carmanager.fragment.cars.CarsIntroFragment;
-import com.cc.carmanager.fragment.cars.CarsSellerFragment;
+import com.cc.carmanager.fragment.cars.CarsCompanyFragment;
 import com.cc.carmanager.util.ScreenUtil;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.ScrollIndicatorView;
@@ -30,7 +30,7 @@ public class CarsDetailActivity extends BarBaseActivity {
     private LayoutInflater inflate;
     public static final String INTENT_STRING_TABNAME = "intent_String_tabname";
     public static final String INTENT_INT_INDEX = "intent_int_index";
-    private int index;
+    private int carId;
     private final int textPadding = 5;//dp
     private final int barWidth = 42;//dp
 
@@ -51,6 +51,12 @@ public class CarsDetailActivity extends BarBaseActivity {
         inflate = LayoutInflater.from(getApplicationContext());
 
         indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+
+
+        Bundle bundle = getIntent().getExtras();
+        carId = bundle.getInt("carId");//读出数据
+
+        setHeader("车辆详情");
     }
 
     @Override
@@ -59,9 +65,14 @@ public class CarsDetailActivity extends BarBaseActivity {
         Log.d("cccc", "Fragment 所在的Activity onDestroy " + this);
     }
 
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+    }
+
     private class MyAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
 
-        private String[] tabNames = {"综述", "配置", "图片", "经销商"};
+        private String[] tabNames = {"综述", "配置", "图片", "经销商", "维修商"};
 
         public MyAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -91,8 +102,12 @@ public class CarsDetailActivity extends BarBaseActivity {
             }else if(position == 1){
                 mainFragment = new CarsConfigFragment();
             }else{
-                mainFragment = new CarsSellerFragment();
+                mainFragment = new CarsCompanyFragment();
             }
+            Bundle bundle = new Bundle();
+            bundle.putInt("position", position);
+            bundle.putInt("carId", carId);
+            mainFragment.setArguments(bundle);
             return mainFragment;
         }
     }

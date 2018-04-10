@@ -3,17 +3,28 @@ package com.cc.carmanager.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.cc.carmanager.R;
+import com.cc.carmanager.bean.PostStatusBean;
+import com.cc.carmanager.net.VolleyInstance;
+import com.cc.carmanager.net.VolleyResult;
+import com.cc.carmanager.util.LoginHelper;
+import com.cc.carmanager.util.NetUrlsSet;
 import com.cc.carmanager.util.RegexUtils;
+import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.util.Utils;
 import com.cc.carmanager.widget.CustomEditText;
+import com.google.gson.Gson;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,14 +50,37 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         this.findViewById(R.id.iv_wechat).setOnClickListener(this);
         this.findViewById(R.id.iv_sina).setOnClickListener(this);
         this.findViewById(R.id.tv_create_account).setOnClickListener(this);
-        this.findViewById(R.id.tv_forget_password).setOnClickListener(this);
+        //this.findViewById(R.id.tv_forget_password).setOnClickListener(this);
     }
 
     private void clickLogin() {
-        String account = accountEdit.getText().toString();
+        final String account = accountEdit.getText().toString();
         String password = passwordEdit.getText().toString();
         if (checkInput(account, password)) {
             // TODO: 请求服务器登录账号
+            Map<String, String> params = new HashMap<>();
+            params.put("userName", account);
+            params.put("pwd", password);
+            VolleyInstance.getVolleyInstance().startJsonObjectPost(NetUrlsSet.URL_USER_LOGIN, params, new VolleyResult() {
+                @Override
+                public void success(String resultStr) {
+                    Log.e("car", resultStr);
+                    Gson gson = new Gson();
+                    PostStatusBean mRecommendBean = gson.fromJson(resultStr, PostStatusBean.class);
+                    if (mRecommendBean.isSuccess()) {
+                        ToastUtils.makeLongText("登陆成功", LoginActivity.this);
+                        LoginHelper.instance.setLogin(account);
+                        finish();
+                    } else {
+                        ToastUtils.makeShortText("登录失败", LoginActivity.this);
+                    }
+                }
+
+                @Override
+                public void failure() {
+                    Log.d("car", "新闻内容网络数据解析失败");
+                }
+            });
         }
     }
 
@@ -64,15 +98,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     .show();
         } else {
             // 账号不匹配手机号格式（11位数字且以1开头）
-            if (!RegexUtils.checkMobile(account)) {
-                Toast.makeText(this, R.string.tip_account_regex_not_right,
-                        Toast.LENGTH_LONG).show();
-            } else if (password == null || password.trim().equals("")) {
-                Toast.makeText(this, R.string.tip_password_can_not_be_empty,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                return true;
-            }
+//            if (!RegexUtils.checkMobile(account)) {
+//                Toast.makeText(this, R.string.tip_account_regex_not_right,
+//                        Toast.LENGTH_LONG).show();
+//            } else if (password == null || password.trim().equals("")) {
+//                Toast.makeText(this, R.string.tip_password_can_not_be_empty,
+//                        Toast.LENGTH_LONG).show();
+//            } else {
+//            }
+            return true;
         }
 
         return false;
@@ -174,9 +208,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             case R.id.tv_create_account:
                 enterRegister();
                 break;
-            case R.id.tv_forget_password:
-                enterForgetPwd();
-                break;
+//            case R.id.tv_forget_password:
+//                enterForgetPwd();
+//                break;
             default:
                 break;
         }

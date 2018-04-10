@@ -5,8 +5,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
     <TextView
-        android:id="@+id/desc"
+        android:id="@+id/apper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -15,7 +28,7 @@
         android:text="外观（84张）"/>
 
     <com.lzy.ninegrid.NineGridView
-        android:id="@+id/nineGrid"
+        android:id="@+id/nineGrid0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -24,5 +37,73 @@
         app:ngv_mode="grid"
         app:ngv_singleImageRatio="1"
         app:ngv_singleImageSize="150dp"/>
+
+
+    <TextView
+        android:id="@+id/control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#88333333"
+        android:textSize="@dimen/textSize_normal"
+        android:text="中控（84张）"/>
+
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/nineGrid1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:ngv_gridSpacing="3dp"
+        app:ngv_maxSize="6"
+        app:ngv_mode="grid"
+        app:ngv_singleImageRatio="1"
+        app:ngv_singleImageSize="150dp"/>
+
+
+
+    <TextView
+        android:id="@+id/seat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#88333333"
+        android:textSize="@dimen/textSize_normal"
+        android:text="座椅（84张）"/>
+
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/nineGrid2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:ngv_gridSpacing="3dp"
+        app:ngv_maxSize="6"
+        app:ngv_mode="grid"
+        app:ngv_singleImageRatio="1"
+        app:ngv_singleImageSize="150dp"/>
+
+
+
+    <TextView
+        android:id="@+id/detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#88333333"
+        android:textSize="@dimen/textSize_normal"
+        android:text="细节（84张）"/>
+
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/nineGrid3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:ngv_gridSpacing="3dp"
+        app:ngv_maxSize="6"
+        app:ngv_mode="grid"
+        app:ngv_singleImageRatio="1"
+        app:ngv_singleImageSize="150dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

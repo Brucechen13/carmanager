@@ -16,11 +16,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cc.carmanager.R;
+import com.cc.carmanager.bean.CarsConfigListBean;
 import com.cc.carmanager.comparisoncar.bean.CarComparisonBean;
 import com.cc.carmanager.comparisoncar.bean.ComparisonCarItem;
 import com.cc.carmanager.comparisoncar.vhtableview.VHBaseAdapter;
 import com.cc.carmanager.comparisoncar.vhtableview.VHTableView;
+import com.cc.carmanager.net.VolleyInstance;
+import com.cc.carmanager.net.VolleyResult;
+import com.cc.carmanager.util.NetUrlsSet;
+import com.cc.carmanager.util.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shizhefei.fragment.LazyFragment;
 
 import java.io.ByteArrayInputStream;
@@ -29,7 +35,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by chenc on 2017/11/11.
@@ -57,10 +68,16 @@ public class CarsConfigFragment extends LazyFragment {
     private boolean isComparsionSame;//对比中
     private int mScrollX;
 
+    private int carId;
+
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle bundle = getArguments();
+        carId = bundle.getInt("carId");
+
         initView();
         initData();
     }
@@ -104,89 +121,215 @@ public class CarsConfigFragment extends LazyFragment {
         if (isComparsionSame && !contentAllData.isEmpty()) {
             toggleData();
         }
-        Gson gson = new Gson();
-        CarComparisonBean carComparisonBean = gson.fromJson(json, CarComparisonBean.class);
-        {
-            try {
-                vht_table.setVisibility(View.VISIBLE);
-                List<CarComparisonBean.ParamEntity> data = carComparisonBean.getParam();
+        String url_news = String.format(Locale.CHINA, NetUrlsSet.URL_CAR_CONFIG, 9);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson = new Gson();
+                CarsConfigListBean mRecommendBean = gson.fromJson(resultStr, CarsConfigListBean.class);
+                if (mRecommendBean.isSuccess()) {
+                    try {
+                        vht_table.setVisibility(View.VISIBLE);
+                        //设置数据源
+                        titleData = new ArrayList<>();
+                        //title 第一个空格
+                        ComparisonCarItem comparisonCarItem = new ComparisonCarItem();
+                        comparisonCarItem.setName("");
+                        titleData.add(comparisonCarItem);
 
-                //设置数据源
-                titleData = new ArrayList<>();
-
-                //title 第一个空格
-                ComparisonCarItem comparisonCarItem = new ComparisonCarItem();
-                comparisonCarItem.setName("");
-                titleData.add(comparisonCarItem);
-
-                //title 第一行车型名称
-                List<CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity> paramitems = data.get(0).getParamitems().get(0).getValueitems();
-                for (CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity paramitem : paramitems) {
-
-                    ComparisonCarItem comparisonCarItem2 = new ComparisonCarItem();
-                    comparisonCarItem2.setName(paramitem.getValue());
-                    comparisonCarItem2.setId(paramitem.getSpecid());
-                    titleData.add(comparisonCarItem2);
-                }
-//title 最后的+号
-                ComparisonCarItem comparisonCarItem3 = new ComparisonCarItem();
-                comparisonCarItem3.setImgBackgroud(R.drawable.icon_tianjia);
-                titleData.add(comparisonCarItem3);
-                //
-                data.get(0).getParamitems().remove(0);
-
-
-                //一大坨数据处理  没有写好    车的具体参数
-                contentAllData = new ArrayList<>();
-                for (CarComparisonBean.ParamEntity paramEntity : data) {
-
-                    for (CarComparisonBean.ParamEntity.ParamitemsEntity paramitemsEntity : paramEntity.getParamitems()) {
-                        ArrayList<ComparisonCarItem> contentRowData = new ArrayList<>();
-                        //每一行的第一个
-                        ComparisonCarItem comparisonCarItem4 = new ComparisonCarItem();
-                        if (paramitemsEntity.getName().indexOf("(") <= 5) {
-                            comparisonCarItem4.setName(paramitemsEntity.getName().replace("(", "\n("));
-                        } else {
-                            comparisonCarItem4.setName(paramitemsEntity.getName());
-                        }
-                        if (!contentAllData.isEmpty()) {//判断行标题
-                            ComparisonCarItem lastComparisonCar = contentAllData.get(contentAllData.size() - 1).get(0);
-                            comparisonCarItem4.setHeader(!lastComparisonCar.getRowTitle().equals(paramEntity.getName()));
-                        }
-                        comparisonCarItem4.setRowTitle(paramEntity.getName());
-                        contentRowData.add(comparisonCarItem4);
-                        //每一行中的具体车型
-                        //开始判断这一行的值是否全部相同
-                        boolean valueSame = true;
-                        String value = null;
-                        for (CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity valueitemsEntity : paramitemsEntity.getValueitems()) {
-                            ComparisonCarItem comparisonCarItem5 = new ComparisonCarItem();
-                            comparisonCarItem5.setName(valueitemsEntity.getValue());
-                            comparisonCarItem5.setId(valueitemsEntity.getSpecid());
-//                            comparisonCarItem5.setColor(valueitemsEntity.getColor());
-                            contentRowData.add(comparisonCarItem5);
-                            if (valueSame) {
-                                if (!TextUtils.isEmpty(value)) {
-                                    valueSame = value.equals(comparisonCarItem5.getName());
-                                }
-                                value = comparisonCarItem5.getName();
+                        List<CarsConfigListBean.CarConfigBean> carConfigBeans = mRecommendBean.getData();
+                        Iterator<CarsConfigListBean.CarConfigBean> sListIterator = carConfigBeans.iterator();
+                        while(sListIterator.hasNext()){
+                            CarsConfigListBean.CarConfigBean bean = sListIterator.next();
+                            if(bean.getCarConfig().getBasisConfig().equals("") || bean.getCarConfig().getLightingConfig().equals("")){
+                                sListIterator.remove();
                             }
                         }
-                        comparisonCarItem4.setSame(valueSame);
-                        //每一行中的最后一个 虚位
-                        ComparisonCarItem comparisonCarItem6 = new ComparisonCarItem();
-                        comparisonCarItem6.setName("-");
-                        contentRowData.add(comparisonCarItem6);
 
-                        contentAllData.add(contentRowData);
+                        for(CarsConfigListBean.CarConfigBean bean :carConfigBeans ){
+                            ComparisonCarItem comparisonCarItem2 = new ComparisonCarItem();
+                            comparisonCarItem2.setName(bean.getCarSeries().getSeriesName());
+                            //comparisonCarItem2.setId(bean.getCarSeries().getId());
+                            titleData.add(comparisonCarItem2);
+                        }
+                        //title 最后的+号
+                        ComparisonCarItem comparisonCarItem3 = new ComparisonCarItem();
+                        comparisonCarItem3.setImgBackgroud(R.drawable.icon_tianjia);
+                        titleData.add(comparisonCarItem3);
+
+
+                        //车的具体参数
+                        contentAllData = new ArrayList<>();
+                        String[] carConfigs = new String[]{
+                                "基本参数", "车身", "发动机", "变速箱", "底盘转向", "车轮制动", "主/被动安全装备", "辅助/操控配置", "外部/防盗配置", "内部配置", "座椅配置", "多媒体配置", "灯光配置", "玻璃/后视镜", "空调/冰箱"
+                        };
+                        String[][] carConfigMore = new String[][]{
+                                {"厂商指导价(元)", "厂商", "级别", "上市时间", "发动机", "变速箱", "长*宽*高(mm)", "车身结构", "最高车速(km/h)", "官方0-100km/h加速(s)", "实测0-100km/h加速(s)", "实测100-0km/h制动(m)", "实测油耗(L/100km)", "工信部综合油耗(L/100km)", "实测离地间隙(mm)", "整车质保"},
+                                {"长度(mm)", "宽度(mm)", "高度(mm)", "轴距(mm)", "前轮距(mm)", "后轮距(mm)", "最小离地间隙(mm)", "整备质量(kg)", "车身结构", "车门数(个)", "座位数(个)", "油箱容积(L)", "行李厢容积(L)"},
+                                {"发动机型号", "排量(mL)", "排量(L)", "进气形式", "气缸排列形式", "气缸数(个)", "每缸气门数(个)", "压缩比", "配气机构", "缸径(mm)", "行程(mm)", "最大马力(Ps)", "最大功率(kW)", "最大功率转速(rpm)", "最大扭矩(N·m)", "最大扭矩转速(rpm)", "发动机特有技术", "燃料形式", "燃油标号", "供油方式", "缸盖材料", "缸体材料", "环保标准"},
+//                                {"电机类型", "电动机总功率(kW)", "电动机总扭矩(N·m)", "前电动机最大功率(kW)", "前电动机最大扭矩(N·m)", "后电动机最大功率(kW)", "后电动机最大扭矩(N·m)", "系统综合功率(kW)", "系统综合扭矩(N·m)", "电池类型", "工信部续航里程(km)", "电池容量(kWh)", "百公里耗电量(kWh/100km)", "电池组质保", "电池充电时间", "快充电量(%)", "充电桩价格"},
+                                {"简称", "挡位个数", "变速箱类型"},
+                                {"驱动方式", "四驱形式", "中央差速器结构", "前悬架类型", "后悬架类型", "助力类型", "车体结构"},
+                                {"前制动器类型", "后制动器类型", "驻车制动类型", "前轮胎规格", "后轮胎规格", "备胎规格"},
+                                {"主/副驾驶座安全气囊", "前/后排侧气囊", "前/后排头部气囊(气帘)", "膝部气囊", "胎压监测装置", "零胎压继续行驶", "安全带未系提示", "ISOFIX儿童座椅接口", "ABS防抱死", "制动力分配(EBD/CBC等)", "刹车辅助(EBA/BAS/BA等)", "牵引力控制(ASR/TCS/TRC等)", "车身稳定控制(ESC/ESP/DSC等)", "并线辅助", "车道偏离预警系统", "主动刹车/主动安全系统", "夜视系统", "疲劳驾驶提示"},
+                                {"前/后驻车雷达", "倒车视频影像", "全景摄像头", "定速巡航", "自适应巡航", "自动泊车入位", "发动机启停技术", "自动驾驶技术", "上坡辅助", "自动驻车", "陡坡缓降", "可变悬架", "空气悬架", "电磁感应悬架", "可变转向比", "前桥限滑差速器/差速锁", "中央差速器锁止功能", "后桥限滑差速器/差速锁", "整体主动转向系统"},
+                                {"电动天窗", "全景天窗", "多天窗", "运动外观套件", "铝合金轮圈", "电动吸合门", "侧滑门", "电动后备厢", "感应后备厢", "车顶行李架", "发动机电子防盗", "车内中控锁", "遥控钥匙", "无钥匙启动系统", "无钥匙进入系统", "远程启动"},
+                                {"皮质方向盘", "方向盘调节", "方向盘电动调节", "多功能方向盘", "方向盘换挡", "方向盘加热", "方向盘记忆", "行车电脑显示屏", "全液晶仪表盘", "HUD抬头数字显示", "内置行车记录仪", "主动降噪", "手机无线充电"},
+                                {"座椅材质", "运动风格座椅", "座椅高低调节", "腰部支撑调节", "肩部支撑调节", "主/副驾驶座电动调节", "第二排靠背角度调节", "第二排座椅移动", "后排座椅电动调节", "副驾驶位后排可调节按钮", "电动座椅记忆", "前/后排座椅加热", "前/后排座椅通风", "前/后排座椅按摩", "第二排独立座椅", "第三排座椅", "后排座椅放倒方式", "前/后中央扶手", "后排杯架", "可加热/制冷杯架"},
+                                {"GPS导航系统", "定位互动服务", "中控台彩色大屏", "中控台彩色大屏尺寸", "中控液晶屏分屏显示", "蓝牙/车载电话", "手机互联/映射", "车联网", "车载电视", "后排液晶屏", "220V/230V电源", "外接音源接口", "CD/DVD", "扬声器品牌", "扬声器数量"},
+                                {"近光灯", "远光灯", "LED日间行车灯", "自适应远近光", "自动头灯", "转向辅助灯", "转向头灯", "前雾灯", "大灯高度可调", "大灯清洗装置", "车内氛围灯"},
+                                {"前/后电动车窗", "车窗一键升降", "车窗防夹手功能", "防紫外线/隔热玻璃", "后视镜电动调节", "后视镜加热", "内/外后视镜自动防眩目", "流媒体车内后视镜", "后视镜电动折叠", "后视镜记忆", "后风挡遮阳帘", "后排侧遮阳帘", "后排侧隐私玻璃", "遮阳板化妆镜", "后雨刷", "感应雨刷"},
+                                {"空调控制方式", "后排独立空调", "后座出风口", "温度分区控制", "车内空气调节/花粉过滤", "车载空气净化器", "车载冰箱"},
+                        };
+                        for(int i = 0; i < carConfigs.length; i++){
+                            String carConfig = carConfigs[i];
+                            List<List<String>> configRes = new ArrayList<>();
+                            for (CarsConfigListBean.CarConfigBean bean : carConfigBeans) {
+                                Gson gson2 = new Gson();
+                                java.lang.reflect.Type type = new TypeToken<LinkedHashMap<String, String>>() {
+                                }.getType();
+                                String json_str = bean.getCarConfig().getTypeValue(carConfig);
+                                LinkedHashMap<String, String> jsonMap = gson2.fromJson(json_str, type);
+                                List<String> config = new ArrayList<>();
+                                if(jsonMap != null) {
+                                    for (Map.Entry<String, String> entry : jsonMap.entrySet()) {
+                                        config.add(entry.getValue());
+                                    }
+                                }else{
+                                    Log.e("car", "车型为空"+carId);
+                                }
+                                configRes.add(config);
+                            }
+                            boolean flag = true;
+                            for(int j = 0; j < carConfigMore[i].length; j ++) {
+                                String config = carConfigMore[i][j];
+                                ArrayList<ComparisonCarItem> contentRowData = new ArrayList<>();
+                                //每一行的第一个
+                                ComparisonCarItem comparisonCarItem4 = new ComparisonCarItem();
+                                comparisonCarItem4.setName(config);
+                                //if (!contentAllData.isEmpty()) {//判断行标题
+                                if(flag) {
+                                    comparisonCarItem4.setHeader(true);
+                                    flag=false;
+                                }else{
+                                    comparisonCarItem4.setHeader(false);
+                                }
+                                comparisonCarItem4.setRowTitle(carConfig);
+                                //}
+                                contentRowData.add(comparisonCarItem4);
+                                //每一行中的具体车型
+                                //开始判断这一行的值是否全部相同
+                                boolean valueSame = true;
+                                String value = null;
+                                for(int k = 0; k < configRes.size(); k ++){
+                                    ComparisonCarItem comparisonCarItem5 = new ComparisonCarItem();
+                                    String val = configRes.get(k).get(j);
+                                    comparisonCarItem5.setName(val.equals("")?"-":val);
+                                    contentRowData.add(comparisonCarItem5);
+                                }
+                                //每一行中的最后一个 虚位
+                                ComparisonCarItem comparisonCarItem6 = new ComparisonCarItem();
+                                comparisonCarItem6.setName("-");
+                                contentRowData.add(comparisonCarItem6);
+                                contentAllData.add(contentRowData);
+
+                            }
+                        }
+                        setAdapter();
+                    } catch (NullPointerException e) {
+                        Log.e("car", e.getLocalizedMessage());
+                        ToastUtils.makeShortText("车型配置出错", CarsConfigFragment.this.getContext());
                     }
-
+                } else {
+                    ToastUtils.makeShortText("未查询到车型配置", CarsConfigFragment.this.getContext());
                 }
-                setAdapter();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
+//        {
+//            try {
+//                vht_table.setVisibility(View.VISIBLE);
+//                List<CarComparisonBean.ParamEntity> data = carComparisonBean.getParam();
+//
+//                //设置数据源
+//                titleData = new ArrayList<>();
+//
+//                //title 第一个空格
+//                ComparisonCarItem comparisonCarItem = new ComparisonCarItem();
+//                comparisonCarItem.setName("");
+//                titleData.add(comparisonCarItem);
+//
+//                //title 第一行车型名称
+//                List<CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity> paramitems = data.get(0).getParamitems().get(0).getValueitems();
+//                for (CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity paramitem : paramitems) {
+//
+//                    ComparisonCarItem comparisonCarItem2 = new ComparisonCarItem();
+//                    comparisonCarItem2.setName(paramitem.getValue());
+//                    comparisonCarItem2.setId(paramitem.getSpecid());
+//                    titleData.add(comparisonCarItem2);
+//                }
+////title 最后的+号
+//                ComparisonCarItem comparisonCarItem3 = new ComparisonCarItem();
+//                comparisonCarItem3.setImgBackgroud(R.drawable.icon_tianjia);
+//                titleData.add(comparisonCarItem3);
+//                //
+//                data.get(0).getParamitems().remove(0);
+//
+//
+//                //一大坨数据处理  没有写好    车的具体参数
+//                contentAllData = new ArrayList<>();
+//                for (CarComparisonBean.ParamEntity paramEntity : data) {
+//
+//                    for (CarComparisonBean.ParamEntity.ParamitemsEntity paramitemsEntity : paramEntity.getParamitems()) {
+//                        ArrayList<ComparisonCarItem> contentRowData = new ArrayList<>();
+//                        //每一行的第一个
+//                        ComparisonCarItem comparisonCarItem4 = new ComparisonCarItem();
+//                        if (paramitemsEntity.getName().indexOf("(") <= 5) {
+//                            comparisonCarItem4.setName(paramitemsEntity.getName().replace("(", "\n("));
+//                        } else {
+//                            comparisonCarItem4.setName(paramitemsEntity.getName());
+//                        }
+//                        if (!contentAllData.isEmpty()) {//判断行标题
+//                            ComparisonCarItem lastComparisonCar = contentAllData.get(contentAllData.size() - 1).get(0);
+//                            comparisonCarItem4.setHeader(!lastComparisonCar.getRowTitle().equals(paramEntity.getName()));
+//                        }
+//                        comparisonCarItem4.setRowTitle(paramEntity.getName());
+//                        contentRowData.add(comparisonCarItem4);
+//                        //每一行中的具体车型
+//                        //开始判断这一行的值是否全部相同
+//                        boolean valueSame = true;
+//                        String value = null;
+//                        for (CarComparisonBean.ParamEntity.ParamitemsEntity.ValueitemsEntity valueitemsEntity : paramitemsEntity.getValueitems()) {
+//                            ComparisonCarItem comparisonCarItem5 = new ComparisonCarItem();
+//                            comparisonCarItem5.setName(valueitemsEntity.getValue());
+//                            comparisonCarItem5.setId(valueitemsEntity.getSpecid());
+////                            comparisonCarItem5.setColor(valueitemsEntity.getColor());
+//                            contentRowData.add(comparisonCarItem5);
+//                            if (valueSame) {
+//                                if (!TextUtils.isEmpty(value)) {
+//                                    valueSame = value.equals(comparisonCarItem5.getName());
+//                                }
+//                                value = comparisonCarItem5.getName();
+//                            }
+//                        }
+//                        comparisonCarItem4.setSame(valueSame);
+//                        //每一行中的最后一个 虚位
+//                        ComparisonCarItem comparisonCarItem6 = new ComparisonCarItem();
+//                        comparisonCarItem6.setName("-");
+//                        contentRowData.add(comparisonCarItem6);
+//
+//                        contentAllData.add(contentRowData);
+//                    }
+//
+//                }
+//                setAdapter();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+        //}
     }
 
 

@@ -1,10 +1,13 @@
 package com.cc.carmanager.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -13,16 +16,39 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.base.BarBaseActivity;
+import com.cc.carmanager.bean.NewsCommentsBean;
+import com.cc.carmanager.bean.NewsContentBean;
+import com.cc.carmanager.bean.NewsFullBean;
+import com.cc.carmanager.bean.PostStatusBean;
+import com.cc.carmanager.net.VolleyInstance;
+import com.cc.carmanager.net.VolleyResult;
+import com.cc.carmanager.util.LoginHelper;
+import com.cc.carmanager.util.NetUrlsSet;
 import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.util.URLImageParser;
+import com.google.gson.Gson;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import cn.jzvd.JZVideoPlayerStandard;
 
 /**
  * Created by chenc on 2017/10/24.
@@ -33,9 +59,15 @@ public class NewsDisplayActivity extends BarBaseActivity {
     private TextView content;
     private TextView title;
     private TextView authorAndTime;
+    private JZVideoPlayerStandard jzVideoPlayerStandard;
     private String link;
     private final String template = "<p><img src='LINK'/></p>";
+    private int news_id;
+
+    private WebView webView;
+
     @Override
+    @SuppressLint("SetJavaScriptEnabled")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWindow();
@@ -43,79 +75,94 @@ public class NewsDisplayActivity extends BarBaseActivity {
 
         setHeader("新能源汽车");
 
-        String html = "Hello \n" +
-                "<img src='http://ww1.sinaimg.cn/mw600/4dc7b570jw1drn1o8mrp0j.jpg' />" +
-                " This is a test \n" +
-                "<img src='http://att.bbs.duowan.com/forum/201311/01/0950172al0qkazlh20hh9n.png'/>";
-
-        String htmlTest = "<p>　　在众多安卓手机中，Nexus系列一贯被视为Google的“亲儿子”，但其实只有设计来自Google，代工生产还是交给其他厂商，包括LG、HTC、三星、华为、摩托罗拉等等。<\\/p>" +
-                "<p>　　不过有传闻称，Google打算完全自己玩儿了，因为一则iPhone在高端市场上不断蚕食市场份额，二则Nexus现在本身的表现也越来越不好：销售渠道过于狭窄，缺乏运营商合作，新的Nexus 6P/5X定位太高影响销售……<\\/p>" +
-                "<p>　　Google CEO Sundar Pichai已经向员工和一些外部人士透露，计划将Nexus系列完全掌控在自己手中，从设计到生产都一手负责，不再依赖其他手机厂商，就像Pixel C笔记本那样变成纯粹的Google产品。<\\/p>" +
-                "<p>　　这样一来，Nexus设备也不会再冠以其他厂商的牌子，只打Google自己的标识。<\\/p>" +
-                "<p>　　虽然Google没有透露该计划的具体细节和执行时间，但是据了解，HTC内部人士对于Google的这种做法并不意外，HTC也可能成为最后一个代工Nexus的第三方厂商。<\\/p>" +
-                "<p>　　此前有消息称，HTC今年将独自代工两款Nexus手机，分别为5.0英寸、5.5英寸。<\\/p><!--IMG#0-->";
-
-        String body = htmlTest.replace("<!--IMG#0-->", template.replace("LINK", "http://img1.cache.netease.com/catchpic/5/59/59F9EB30B047D22DAD5F12B14DB4682E.jpg"));
-
-
-
         content = (TextView)findViewById(R.id.tv_content);
         title = (TextView)findViewById(R.id.tv_newstitle);
         authorAndTime = (TextView)findViewById(R.id.tv_author_time);
+        jzVideoPlayerStandard = (JZVideoPlayerStandard) findViewById(R.id.videoplayer);
+        webView = (WebView)findViewById(R.id.webview);
 
-        URLImageParser p = new URLImageParser(content, this);
-        Spanned htmlSpan = Html.fromHtml(body, p, null);
-        content.setText(htmlSpan);
+        // 启用javascript
+        webView.getSettings().setJavaScriptEnabled(true);
+        //自适应屏幕
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON_DEMAND);
+        webView.setWebViewClient(new WebViewClient());
 
         findViewById(R.id.comment).setOnClickListener(this);
         findViewById(R.id.collect).setOnClickListener(this);
-        findViewById(R.id.share).setOnClickListener(this);
+        findViewById(R.id.like).setOnClickListener(this);
         final EditText editText = (EditText)findViewById(R.id.text_input);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                Log.e("info", ""+i);
                 if(i == EditorInfo.IME_ACTION_SEND){
+                    if(!LoginHelper.instance.checkLogin()){
+                        Intent intent=new Intent(NewsDisplayActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        return false;
+                    }
                     ((InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
                     String text = editText.getText().toString();
-                    Log.e("info", text);
+                    sendComment(text);
                     editText.clearFocus();
                     editText.setText("");
-                    ToastUtils.makeLongText(text, NewsDisplayActivity.this);
                     return true;
                 }
                 return false;
             }
         });
 
+        news_id = getIntent().getExtras().getInt("news_id", 90);
+        getNews(news_id);
+
     }
 
-    private void getNews(final String link) {
-//        MySingleton.getInstance(context.getApplicationContext()).getRequestQueue().add(
-//                RequestSingletonFactory.getInstance().getGETStringRequest(context, link,
-//                        new Response.Listener() {
-//                            @Override
-//                            public void onResponse(Object response) {
-//                                JSONObject obj;
-//                                try {
-//                                    String id = NeteaseURLParse.getNewsID(link);
-//                                    String hold = response.toString().replace(id, "newsID");
-//                                    obj = new JSONObject(hold.toString());
-//
-//                                    NewRoot newRoot = new Gson().fromJson(obj.toString(), Global.NewRoot);
-//
-//                                    Log.i("RVA", "response: " + response.toString());
-//                                    Log.i("RVA", "newRoot: " + newRoot.toString());
-//
-//                                    updateViewFromJSON(newRoot);
-//
-//                                } catch (JSONException | JsonParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        }));
+    private void sendComment(String comment){
+        Map<String, String> params = new HashMap<>();
+        params.put("newsId", ""+news_id);
+        params.put("content", comment);
+        VolleyInstance.getVolleyInstance().startJsonObjectPost(NetUrlsSet.URL_CAR_COMMENT, params, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Log.e("car", resultStr);
+                Gson gson=new Gson();
+                PostStatusBean mRecommendBean=gson.fromJson(resultStr,PostStatusBean.class);
+                if(mRecommendBean.isSuccess()){
+                    ToastUtils.makeLongText("评论完成", NewsDisplayActivity.this);
+                }else{
+                    ToastUtils.makeShortText("评论上传失败", NewsDisplayActivity.this);
+                }
+            }
+            @Override
+            public void failure() {
+                Log.d("car", "新闻内容网络数据解析失败");
+            }
+        });
+    }
+
+    private void getNews(int news_id) {
+        VolleyInstance.getVolleyInstance().startRequest(String.format(NetUrlsSet.URL_NEWS_CONTENT, news_id), new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson=new Gson();
+                NewsFullBean mRecommendBean=gson.fromJson(resultStr,NewsFullBean.class);
+                if(mRecommendBean.isSuccess()){
+                    updateViewFromJSON(mRecommendBean.getData());
+                }else{
+                    ToastUtils.makeShortText("新闻加载失败", NewsDisplayActivity.this);
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("aaa", "新闻内容网络数据解析失败");
+            }
+        });
     }
 
 
@@ -124,9 +171,6 @@ public class NewsDisplayActivity extends BarBaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//            tintManager = new SystemBarTintManager(this);
-//            tintManager.setStatusBarTintColor(getResources().getColor(R.color.tab_top_background));
-//            tintManager.setStatusBarTintEnabled(true);
         }
     }
 
@@ -136,20 +180,63 @@ public class NewsDisplayActivity extends BarBaseActivity {
         switch (view.getId()){
             case R.id.comment:
                 Intent intent = new Intent(this, NewsCommentsActivity.class);
+                intent.putExtra("news_id", news_id);
                 startActivity(intent);
                 break;
-            case R.id.share:
-                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
-                        {
-                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
-                                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
-                        };
-                new ShareAction(this).setDisplayList( displaylist )
-                        .withText( "呵呵" )
-                        .withSubject("subject")
-                        .open();
+            case R.id.like:
+                LoginHelper.instance.isLogin(NewsDisplayActivity.this, new VolleyResult() {
+                    @Override
+                    public void success(String resultStr) {VolleyInstance.getVolleyInstance().startRequest(String.format(Locale.CHINA, NetUrlsSet.URL_NEWS_LIKE, news_id), new VolleyResult(){
+                        @Override
+                        public void success(String resultStr) {
+                            Gson gson = new Gson();
+                            PostStatusBean mRecommendBean = gson.fromJson(resultStr, PostStatusBean.class);
+                            if(mRecommendBean.isSuccess()){
+                                ToastUtils.makeLongText("点赞成功", NewsDisplayActivity.this);
+                            }else{
+                                ToastUtils.makeLongText("点赞失败", NewsDisplayActivity.this);
+                            }
+                        }
+                        @Override
+                        public void failure() {
+                            Log.d("car", "新闻内容网络数据解析失败");
+                        }
+                    });
+                    }
+
+                    @Override
+                    public void failure() {
+
+                    }
+                });
                 break;
             case R.id.collect:
+                LoginHelper.instance.isLogin(NewsDisplayActivity.this, new VolleyResult() {
+                    @Override
+                    public void success(String resultStr) {
+                        VolleyInstance.getVolleyInstance().startRequest(String.format(Locale.CHINA, NetUrlsSet.URL_NEWS_COLLECT, news_id), new VolleyResult() {
+                            @Override
+                            public void success(String resultStr) {
+                                Gson gson = new Gson();
+                                PostStatusBean mRecommendBean = gson.fromJson(resultStr, PostStatusBean.class);
+                                if(mRecommendBean.isSuccess()){
+                                    ToastUtils.makeLongText("收藏成功", NewsDisplayActivity.this);
+                                }else{
+                                    ToastUtils.makeLongText("收藏失败", NewsDisplayActivity.this);
+                                }
+                            }
+                            @Override
+                            public void failure() {
+                                Log.d("car", "新闻内容网络数据解析失败");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure() {
+
+                    }
+                });
                 break;
         }
     }
@@ -157,30 +244,20 @@ public class NewsDisplayActivity extends BarBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
 
-//    private void updateViewFromJSON(NewRoot newRoot) {
-//        NewsID hold = newRoot.getNewsID();
-//        //设置标题
-//        title.setText(hold.getTitle());
-//
-//        //设置作者和时间
-//        int first = hold.getPtime().indexOf("-");
-//        int last = hold.getPtime().lastIndexOf(":");
-//        authorAndTime.setText(hold.getSource() + "    " + hold.getPtime().substring(first + 1, last));
-//
-//        //设置正文
-//        String body = hold.getBody();
-//        for (Img img : hold.getImg()) {
-//            body = body.replace(img.getRef(), template.replace("LINK", img.getSrc()));
-//        }
-//
-//        Log.i("RVA", "设置body： " + body);
-//        URLImageParser p = new URLImageParser(content, this);
-//        Spanned htmlSpan = Html.fromHtml(body, p, null);
-//        content.setText(htmlSpan);
-//        content.setTextSize(18);
-//    }
+    private void updateViewFromJSON(NewsContentBean newRoot) {
+        //设置标题
+        title.setText(newRoot.getTitle());
+
+        //设置作者和时间
+        authorAndTime.setText(newRoot.getAuthor() + "    " + newRoot.getCreateTime().getFullTime());
+
+        //设置正文
+        String body = newRoot.getContentMobile();
+        Log.e("car", body);
+        //webView.loadDataWithBaseURL( null, body , "text/html", "UTF-8", null );
+        webView.loadDataWithBaseURL("hhtp://www.baidu.com", body,"text/html; charset=utf-8", "UTF-8", null);
+    }
 }

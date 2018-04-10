@@ -8,82 +8,62 @@ import java.util.List;
 
 public class CarsBrandBean {
 
-    private int returncode;
-    private String message;
-    private List<CarBrandBean> brandlist;
+    private List<CarBrandBean> data;
+    public boolean success;
 
-    public int getReturncode() {
-        return returncode;
+    public List<CarBrandBean> getData() {
+        return data;
     }
 
-    public void setReturncode(int returncode) {
-        this.returncode = returncode;
+    public void setData(List<CarBrandBean> data) {
+        this.data = data;
     }
 
-    public String getMessage() {
-        return message;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public List<CarBrandBean> getBrandlist() {
-        return brandlist;
-    }
-
-    public void setBrandlist(List<CarBrandBean> brandlist) {
-        this.brandlist = brandlist;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public class CarBrandBean{
-        String letter;
-        List<CarBean> list;
+        String brandName;
+        String iconSrc;
+        int id;
+        int idx;
 
-        public String getLetter() {
-            return letter;
+        public String getBrandName() {
+            return brandName;
         }
 
-        public void setLetter(String letter) {
-            this.letter = letter;
+        public void setBrandName(String brandName) {
+            this.brandName = brandName;
         }
 
-        public List<CarBean> getList() {
-            return list;
+        public String getIconSrc() {
+            return iconSrc;
         }
 
-        public void setList(List<CarBean> list) {
-            this.list = list;
+        public void setIconSrc(String iconSrc) {
+            this.iconSrc = iconSrc;
         }
-    }
 
-    public class CarBean{
-        String id;
-        String name;
-        String imgurl;
-
-        public String getId() {
+        public int getId() {
             return id;
         }
 
-        public void setId(String id) {
+        public void setId(int id) {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
+        public int getIdx() {
+            return idx;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getImgurl() {
-            return imgurl;
-        }
-
-        public void setImgurl(String imgurl) {
-            this.imgurl = imgurl;
+        public void setIdx(int idx) {
+            this.idx = idx;
         }
     }
+
 }

@@ -7,92 +7,91 @@
     android:orientation="vertical"
     >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#fffffbfa"
-        android:paddingLeft="5dp"
-        android:paddingBottom="10dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#fffffbfa"-->
+        <!--android:paddingLeft="5dp"-->
+        <!--android:paddingBottom="10dp"-->
+        <!--android:paddingRight="5dp"-->
+        <!--android:paddingTop="5dp">-->
 
-        <com.cc.carmanager.widget.CustomEditText
-            android:id="@+id/school_friend_member_search_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_search_input"
-            android:drawableLeft="@mipmap/icon_search_big"
-            android:drawablePadding="5dp"
-            android:drawableRight="@drawable/ic_edit_text_delbtn"
-            android:focusable="false"
-            android:freezesText="true"
-            android:gravity="center_vertical"
-            android:hint="搜索"
-            android:imeOptions="actionSearch"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textColorHint="#ffb5b5b5"
-            android:textSize="14sp" />
-    </RelativeLayout>
+        <!--<com.cc.carmanager.widget.CustomEditText-->
+            <!--android:id="@+id/school_friend_member_search_input"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/bg_search_input"-->
+            <!--android:drawableLeft="@mipmap/icon_search_big"-->
+            <!--android:drawablePadding="5dp"-->
+            <!--android:drawableRight="@drawable/ic_edit_text_delbtn"-->
+            <!--android:focusable="false"-->
+            <!--android:freezesText="true"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:hint="搜索"-->
+            <!--android:imeOptions="actionSearch"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:singleLine="true"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:textColorHint="#ffb5b5b5"-->
+            <!--android:textSize="14sp" />-->
+    <!--</RelativeLayout>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_size_30dp"
-        android:gravity="center_vertical">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="83dp"-->
+        <!--android:layout_marginLeft="13dp"-->
+        <!--android:layout_marginRight="13dp"-->
+        <!--android:orientation="horizontal">-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/index_recommend"
-            android:textColor="@color/black_title_color"
-            android:textSize="@dimen/small_text_size"/>
+        <!--<com.cc.carmanager.view.ImageTextView-->
+            <!--android:id="@+id/menu_knowledge_id"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="3" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/index_recommend_more"
-            android:textColor="@color/content_more"
-            android:textSize="@dimen/text_size_12dp" />
+        <!--<com.cc.carmanager.view.ImageTextView-->
+            <!--android:id="@+id/menu_manual_id"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="3" />-->
 
-        <ImageView
-            android:id="@+id/recommand_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_size_5dp"
-            android:layout_marginRight="@dimen/dimen_size_5dp"
-            android:src="@mipmap/icon_more" />
-    </LinearLayout>
+        <!--<com.cc.carmanager.view.ImageTextView-->
+            <!--android:id="@+id/menu_article_id"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="3" />-->
+    <!--</LinearLayout>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="83dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:orientation="horizontal">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dimen_size_30dp"-->
+        <!--android:gravity="center_vertical">-->
 
-        <com.cc.carmanager.view.ImageTextView
-            android:id="@+id/menu_knowledge_id"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3" />
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/index_recommend"-->
+            <!--android:textColor="@color/black_title_color"-->
+            <!--android:textSize="@dimen/small_text_size"/>-->
 
-        <com.cc.carmanager.view.ImageTextView
-            android:id="@+id/menu_manual_id"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/index_recommend_more"-->
+            <!--android:textColor="@color/content_more"-->
+            <!--android:textSize="@dimen/text_size_12dp" />-->
 
-        <com.cc.carmanager.view.ImageTextView
-            android:id="@+id/menu_article_id"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3" />
-    </LinearLayout>
-
+        <!--<ImageView-->
+            <!--android:id="@+id/recommand_more"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="@dimen/dimen_size_5dp"-->
+            <!--android:layout_marginRight="@dimen/dimen_size_5dp"-->
+            <!--android:src="@mipmap/icon_more" />-->
+    <!--</LinearLayout>-->
     <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

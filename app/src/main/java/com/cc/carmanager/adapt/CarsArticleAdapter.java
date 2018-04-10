@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.cc.carmanager.R;
+import com.cc.carmanager.adapt.holder.CommonViewHolder;
 import com.cc.carmanager.bean.ArticleItemBean;
 import com.cc.carmanager.vollley.MySingleton;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by chenc on 2017/11/4.
  */
-public class CarsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CarsArticleAdapter extends RecyclerView.Adapter<CommonViewHolder> {
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
@@ -37,54 +38,26 @@ public class CarsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View hold = mLayoutInflater.inflate(R.layout.item_index_other, parent, false);
-        return new TextViewHolder(hold);
+    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        CommonViewHolder newsVH = CommonViewHolder.getViewHolder(parent, R.layout.item_index_other);
+        return newsVH;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof TextViewHolder) {
-            ((TextViewHolder) holder).mTitle.setText(listItem.get(position).getTitle());
-            ((TextViewHolder) holder).mSubTitle.setText(""+listItem.get(position).getFileSize()+" KB");
-
-            NetworkImageView tempImage = ((TextViewHolder) holder).mImageView;
-            setNetworkImageView(tempImage, listItem.get(position).getPicUrl());
-            Log.i(TAG, "onBindViewHolder TextViewHolder");
-            ((TextViewHolder) holder).v.setOnClickListener(new TextViewHolderListener(position));
-        }
+    public void onBindViewHolder(CommonViewHolder holder, int position) {
+        holder.setText(R.id.list_item_news_title,listItem.get(position).getTitle());
+        holder.setNetworkImageView(R.id.iv_left_image,listItem.get(position).getPicUrl(), defaultImage);
+        holder.setItemClick(new TextViewHolderListener(position));
     }
 
     @Override
     public int getItemCount() {
-        return listItem == null ? 0 : listItem.size() + 1;
+        return listItem == null ? 0 : listItem.size();
     }
 
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    public static class TextViewHolder extends RecyclerView.ViewHolder {
-        NetworkImageView mImageView;
-        TextView mTitle;
-        TextView mSubTitle;
-        View v;
-
-        TextViewHolder(View view) {
-            super(view);
-            v = view;
-            mImageView = (NetworkImageView) view.findViewById(R.id.iv_left_image);
-            mTitle = (TextView) view.findViewById(R.id.list_item_news_title);
-            mSubTitle = (TextView) view.findViewById(R.id.list_item_news_subtitle);
-        }
-    }
-
-    private void setNetworkImageView(NetworkImageView networkImageView, String url) {
-        networkImageView.setDefaultImageResId(defaultImage);
-        networkImageView.setErrorImageResId(defaultImage);
-        networkImageView.setImageUrl(url,
-                MySingleton.getInstance().getImageLoader());
     }
 
 

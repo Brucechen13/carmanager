@@ -32,4 +32,8 @@ public class NewsCommentsBean {
     public void setCmTime(String cmTime) {
         this.cmTime = cmTime;
     }
+
+
+    public class CommentItem{
+    }
 }

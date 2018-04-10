@@ -11,11 +11,15 @@ import android.view.ViewGroup;
 import com.cc.carmanager.R;
 import com.cc.carmanager.activity.NewsDisplayActivity;
 import com.cc.carmanager.adapt.holder.CommonViewHolder;
+import com.cc.carmanager.bean.CarsNewsBean;
+import com.cc.carmanager.bean.NewsItemBean;
+
+import java.util.List;
 
 /**
  * Created by chenc on 2017/10/23.
  */
-public class CarsNewsRecommandAdapter extends CarsNewsBaseAdapter {
+public class CarsNewsRecommandAdapter extends RecyclerView.Adapter<CommonViewHolder>  {
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
@@ -24,6 +28,13 @@ public class CarsNewsRecommandAdapter extends CarsNewsBaseAdapter {
     int defaultImage = R.drawable.load_fail;
     int failImage = R.drawable.load_fail;
     private int[] defaultImages = new int[]{defaultImage};
+
+    protected List<NewsItemBean> datas;
+
+    public void setDatas(List<NewsItemBean> datas) {
+        this.datas = datas;
+        notifyDataSetChanged();
+    }
 
     public CarsNewsRecommandAdapter(Context context, RecyclerView recyclerView) {
         mContext = context;
@@ -39,15 +50,15 @@ public class CarsNewsRecommandAdapter extends CarsNewsBaseAdapter {
 
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position) {
-        holder.setText(R.id.list_item_news_title,datas.getNewslist().get(position).getTitle());
-        holder.setText(R.id.list_item_news_subtitle,datas.getNewslist().get(position).getTime() + "2017-10-3");
-        holder.setNetworkImageView(R.id.iv_left_image,datas.getNewslist().get(position).getSmallpic(), defaultImage);
+        holder.setText(R.id.list_item_news_title,datas.get(position).getTitle());
+        holder.setText(R.id.list_item_news_subtitle,datas.get(position).getPublishTime().getFullTime());
+        holder.setNetworkImageView(R.id.iv_left_image,datas.get(position).getIconSrc(), defaultImage);
         holder.setItemClick(new TextViewHolderListener(position));
     }
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.getNewslist().size();
+        return datas == null ? 0 : datas.size();
     }
 
     @Override
@@ -65,9 +76,9 @@ public class CarsNewsRecommandAdapter extends CarsNewsBaseAdapter {
 
         @Override
         public void onClick(View v) {
-            Log.d("RVA", "TextViewHolderListener :" + datas.getNewslist().get(position) + "");
+            Log.d("RVA", "TextViewHolderListener :" + datas.get(position) + "");
             Intent i = new Intent(mContext, NewsDisplayActivity.class);
-//            i.putExtra("NEWS_LINK", jsonLink);
+            i.putExtra("news_id", datas.get(position).getId());
             mContext.startActivity(i);
         }
     }

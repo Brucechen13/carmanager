@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -17,11 +18,23 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.cc.carmanager.R;
+import com.cc.carmanager.bean.CarPicBannerBean;
+import com.cc.carmanager.bean.CarPicBean;
+import com.cc.carmanager.bean.CarSeriesBean;
+import com.cc.carmanager.net.VolleyInstance;
+import com.cc.carmanager.net.VolleyResult;
+import com.cc.carmanager.util.NetUrlsSet;
+import com.cc.carmanager.util.ToastUtils;
 import com.cc.carmanager.vollley.MySingleton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shizhefei.fragment.LazyFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by chenc on 2017/12/30.
@@ -30,21 +43,62 @@ import java.util.List;
 public class CarsIntroFragment extends LazyFragment{
 
     private List<Fragment> xinwen_framentlist;
+    int carId;
+    private List<YearList.YearType> datas = new ArrayList<>();
+    private RadioGroup xinwen_Rradio;
 
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carintro_fragment_layout);
 
-        NetworkImageView networkImageView=(NetworkImageView)findViewById(R.id.iv_left_image);
+        Bundle bundle = getArguments();
+        carId = bundle.getInt("carId");
+
+        xinwen_Rradio = (RadioGroup) findViewById(R.id.xinwen_radiogroup);
+        initdata(xinwen_Rradio);
+        initBanner();
+
+
+    }
+
+    //初始化banner
+    private void initBanner(){
+        final NetworkImageView networkImageView=(NetworkImageView)findViewById(R.id.iv_left_image);
         networkImageView.setDefaultImageResId(R.drawable.load_fail);
         networkImageView.setErrorImageResId(R.drawable.load_fail);
-        networkImageView.setImageUrl("http://img.pcauto.com.cn/images/pcautogallery/modle/article/201710/29/15092917392405740_660.webp",
-                MySingleton.getInstance().getImageLoader());
 
-        //新闻导航栏控件
-        final RadioGroup xinwen_Rradio = (RadioGroup) findViewById(R.id.xinwen_radiogroup);
-        initdata(xinwen_Rradio);
+        String url_news = String.format(Locale.CHINA, NetUrlsSet.URL_CAR_PICBANNER, 9);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson = new Gson();
+                CarPicBannerBean mRecommendBean = gson.fromJson(resultStr, CarPicBannerBean.class);
+                if (mRecommendBean.isSuccess()) {
+                    Gson gson2 = new Gson();
+                    java.lang.reflect.Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                    String json_str = mRecommendBean.getData().getAppearance();
+                    List<String> jsonMap = gson2.fromJson(json_str, type);
+                    if(jsonMap != null && jsonMap.size() > 0) {
+                        String pic = jsonMap.get(0);
+                        pic = "http://img.pcauto.com.cn/images/pcautogallery/modle/article/201710/29/15092917392405740_660.webp";
+                        networkImageView.setImageUrl(pic,
+                                MySingleton.getInstance().getImageLoader());
+                    }
+                } else {
+                    ToastUtils.makeShortText("未查询到车型图片", CarsIntroFragment.this.getContext());
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("car", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
+    }
+
+    //初始化导航栏
+    private void initRadioGroup(){//新闻导航栏控件
         final ViewPager xinwen_viewpage = (ViewPager) findViewById(R.id.xinwen_viewpager);
         final HorizontalScrollView xinwen_scrollView = (HorizontalScrollView) findViewById(R.id.xinwen_scroll);
         final TextView xinwen_indicator = (TextView) findViewById(R.id.xinwen_indicator);
@@ -69,7 +123,7 @@ public class CarsIntroFragment extends LazyFragment{
                         radioBtn.clearAnimation();
                     }
                 }
-                if(checkedId >= 0 && checkedId <= titles_.length) {
+                if(checkedId >= 0 && checkedId <= datas.size()+1) {
                     xinwen_viewpage.setCurrentItem(checkedId);
                 }
             }
@@ -111,17 +165,37 @@ public class CarsIntroFragment extends LazyFragment{
         });
     }
 
-    String [] titles_ = {"全部在售", "2018款", "2017款", "2016款", "2015款", "2014款"};
     //初始化数据
-    private void initdata(RadioGroup group) {
-        int size = titles_.length;
-        for (int i = 0; i < size; i++) {
-            addRadioButton(group, titles_[i], i==0, i);
-        }
+    private void initdata(final RadioGroup group) {
+        String url_news = String.format(Locale.CHINA, NetUrlsSet.URL_CAR_YEARTYPE, carId);
+        addRadioButton(group, "全部在售", true, 0, 0);
+        VolleyInstance.getVolleyInstance().startRequest(url_news, new VolleyResult() {
+            @Override
+            public void success(String resultStr) {
+                Gson gson = new Gson();
+                YearList mRecommendBean = gson.fromJson(resultStr, YearList.class);
+                if (mRecommendBean.isSuccess()) {
+                    int index = 1;
+                    datas.addAll(mRecommendBean.getData());
+                    for(YearList.YearType bean : mRecommendBean.getData()){
+                        String key = bean.getYearType()+"款";
+                        addRadioButton(group, key, false, index++, bean.getYearType());
+                    }
+                    initRadioGroup();
+                } else {
+                    ToastUtils.makeShortText("未查询到车型", CarsIntroFragment.this.getContext());
+                }
+            }
+
+            @Override
+            public void failure() {
+                Log.d("aaa", "推荐界面下的推荐网络数据解析失败");
+            }
+        });
     }
 
 
-    private void addRadioButton(RadioGroup group, String text, boolean checked, int id){
+    private void addRadioButton(RadioGroup group, String text, boolean checked, int id, int yearType){
         RadioButton radioButton = (RadioButton) LayoutInflater.from(this.getActivity()).inflate(R.layout.item_radiobutton, null);
         radioButton.setText(text);
         radioButton.setChecked(checked);
@@ -133,7 +207,8 @@ public class CarsIntroFragment extends LazyFragment{
         }
         CarsIntroListFragment toutiao=new CarsIntroListFragment();
         Bundle bundletoutiao=new Bundle();
-        bundletoutiao.putString("xinwendaohang", "头条");
+        bundletoutiao.putInt("yearType", yearType);
+        bundletoutiao.putInt("carId", carId);
         toutiao.setArguments(bundletoutiao);
         xinwen_framentlist.add(toutiao);
     }
@@ -152,6 +227,38 @@ public class CarsIntroFragment extends LazyFragment{
         @Override
         public int getCount() {
             return xinwen_framentlist.size();
+        }
+    }
+
+    class YearList{
+        private List<YearType> data;
+        private boolean success;
+
+        public List<YearType> getData() {
+            return data;
+        }
+
+        public void setData(List<YearType> data) {
+            this.data = data;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+        class YearType{
+            private int yearType;
+
+            public int getYearType() {
+                return yearType;
+            }
+
+            public void setYearType(int yearType) {
+                this.yearType = yearType;
+            }
         }
     }
 }
